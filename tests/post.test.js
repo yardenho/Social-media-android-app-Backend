@@ -34,12 +34,4 @@ describe("GET / ", () => {
         expect(response.body[0].message).toEqual(newPostMessage);
         expect(response.body[0].sender).toEqual(newPostSender);
     });
-
-    //יש את זה התמונה בפלפאון
-    // test("get post by Id", async () => {
-    //     const response = await request(app).get("/post/"+newPostId);
-    //     expect(response.statusCode).toEqual(200);
-    //     expect(response.body.message).toEqual(newPostMessage);
-    //     expect(response.body.sender).toEqual(newPostSender);
-    // });
 });
