@@ -31,7 +31,7 @@ afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield post_model_1.default.remove();
     mongoose_1.default.connection.close(); //צריך משום שהקונקשין הזה נשאר פתוח בסוף הטסטים ולכן חייב לסגור אותו
 }));
-describe("GET / ", () => {
+describe("Posts Tests ", () => {
     test("add new post", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(server_1.default).post("/post").send({
             message: firstPostMessage,
@@ -76,33 +76,39 @@ describe("GET / ", () => {
         expect(response.body[0].sender).toEqual(secondPostSender);
         expect(response.body[0]._id).toEqual(receivedSecondPostId);
     }));
-    // test("update post by Id", async () => {
-    //     let response = await request(app)
-    //         .put("/post/" + receivedFirstPostId)
-    //         .send({
-    //             message: newPostMessageUpdated,
-    //             sender: firstPostSender,
-    //         });
-    //     expect(response.statusCode).toEqual(200);
-    //     expect(response.body.message).toEqual(newPostMessageUpdated);
-    //     expect(response.body.sender).toEqual(firstPostSender);
-    //     response = await request(app).get("/post/" + receivedFirstPostId);
-    //     expect(response.statusCode).toEqual(200);
-    //     expect(response.body.message).toEqual(newPostMessageUpdated);
-    //     expect(response.body.sender).toEqual(firstPostSender);
-    //     response = await request(app).put("/post/12345").send({
-    //         message: newPostMessageUpdated,
-    //         sender: firstPostSender,
-    //     });
-    //     expect(response.statusCode).toEqual(400);
-    //     response = await request(app)
-    //         .put("/post/" + receivedFirstPostId)
-    //         .send({
-    //             message: newPostMessageUpdated,
-    //         });
-    //     expect(response.statusCode).toEqual(200);
-    //     expect(response.body.message).toEqual(newPostMessageUpdated);
-    //     expect(response.body.sender).toEqual(firstPostSender);
-    // });
+    test("get post by wrong sender", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(server_1.default).get("/post?sender=12345");
+        console.log(response.body);
+        expect(response.statusCode).toEqual(200);
+        expect(response.body.length).toEqual(0);
+    }));
+    test("update post by Id", () => __awaiter(void 0, void 0, void 0, function* () {
+        let response = yield (0, supertest_1.default)(server_1.default)
+            .put("/post/" + receivedFirstPostId)
+            .send({
+            message: newPostMessageUpdated,
+            sender: firstPostSender,
+        });
+        expect(response.statusCode).toEqual(200);
+        expect(response.body.message).toEqual(newPostMessageUpdated);
+        expect(response.body.sender).toEqual(firstPostSender);
+        response = yield (0, supertest_1.default)(server_1.default).get("/post/" + receivedFirstPostId);
+        expect(response.statusCode).toEqual(200);
+        expect(response.body.message).toEqual(newPostMessageUpdated);
+        expect(response.body.sender).toEqual(firstPostSender);
+        response = yield (0, supertest_1.default)(server_1.default).put("/post/12345").send({
+            message: newPostMessageUpdated,
+            sender: firstPostSender,
+        });
+        expect(response.statusCode).toEqual(400);
+        response = yield (0, supertest_1.default)(server_1.default)
+            .put("/post/" + receivedFirstPostId)
+            .send({
+            message: newPostMessageUpdated,
+        });
+        expect(response.statusCode).toEqual(200);
+        expect(response.body.message).toEqual(newPostMessageUpdated);
+        expect(response.body.sender).toEqual(firstPostSender);
+    }));
 });
 //# sourceMappingURL=post.test.js.map

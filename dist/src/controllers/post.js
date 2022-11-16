@@ -56,13 +56,10 @@ const getPostById = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 });
 const updatePostById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(req.params.id);
-    //save in DB
-    // const post = new Post({
-    //     message: req.body.message,
-    //     sender: req.body.sender,
-    // });
     try {
-        const newPost = yield post_model_1.default.updateOne({ _id: req.params.id }, { message: req.body.message, sender: req.body.sender });
+        const newPost = yield post_model_1.default.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+        });
         console.log("save post in db");
         res.status(200).send(newPost);
     }

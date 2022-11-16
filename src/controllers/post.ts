@@ -48,18 +48,11 @@ const getPostById = async (req: Request, res: Response) => {
 
 const updatePostById = async (req: Request, res: Response) => {
     console.log(req.params.id);
-    //save in DB
-
-    // const post = new Post({
-    //     message: req.body.message,
-    //     sender: req.body.sender,
-    // });
 
     try {
-        const newPost = await Post.updateOne(
-            { _id: req.params.id },
-            { message: req.body.message, sender: req.body.sender }
-        );
+        const newPost = await Post.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+        });
         console.log("save post in db");
         res.status(200).send(newPost);
     } catch (err) {
