@@ -8,7 +8,7 @@ app.use(bodyParser.urlencoded({ extended: true, limit: "1mb" }));
 app.use(bodyParser.json());
 
 import mongoose from "mongoose";
-// mongoose.connect(process.env.DATABASA_URL); // { useNewUrlParser: true });
+mongoose.connect(process.env.DATABASA_URL); // { useNewUrlParser: true });
 const db = mongoose.connection;
 
 db.on("error", (error) => {
@@ -21,7 +21,7 @@ db.once("open", () => {
 
 app.use(express.static("public")); //מאפשר גישה לכל מה שנמצא בתקיית public
 
-import postRouter from "./routes/post_route.js";
+import postRouter from "./routes/post_route";
 app.use("/post", postRouter);
 
 export = app;

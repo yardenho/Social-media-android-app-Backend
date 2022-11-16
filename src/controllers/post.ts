@@ -72,6 +72,5 @@ export = {
     getAllPosts,
     addNewPost,
     getPostById,
-    getPostBySender,
     updatePostById,
 };

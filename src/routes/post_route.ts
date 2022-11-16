@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import post from "../src/controllers/post.js";
+import post from "../controllers/post";
 
 router.get("/", post.getAllPosts);
 
