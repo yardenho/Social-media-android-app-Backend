@@ -21,6 +21,9 @@ db.once("open", () => {
 
 app.use(express.static("public")); //מאפשר גישה לכל מה שנמצא בתקיית public
 
+import authRouter from "./routes/auth_route.js";
+app.use("/auth", authRouter);
+
 import postRouter from "./routes/post_route";
 app.use("/post", postRouter);
 

@@ -7,21 +7,26 @@
         "test": "tsc && jest --detectOpenHandles --forceExit ./dist/src/tests",
         "start": "tsc && node dist/src/app.js",
         "lint": "eslint . --ext .ts",
-        "devstart": "nodemon ./src/app.ts"
+        "devstart": "nodemon ./src/app.ts",
+        "testAuth": "tsc && jest --detectOpenHandles --forceExit ./dist/src/tests/auth.test.js"
     },
     "author": "Yarden Hovav",
     "license": "ISC",
     "dependencies": {
         "@babel/plugin-transform-modules-commonjs": "^7.19.6",
+        "bcrypt": "^5.1.0",
         "body-parser": "^1.20.1",
         "dotenv": "^16.0.3",
         "express": "^4.18.2",
+        "jsonwebtoken": "^8.5.1",
         "mongoose": "^6.7.2",
         "nodemon": "^2.0.20"
     },
     "devDependencies": {
+        "@types/bcrypt": "^5.0.0",
         "@types/express": "^4.17.1",
         "@types/jest": "^29.2.2",
+        "@types/jsonwebtoken": "^8.5.9",
         "@typescript-eslint/eslint-plugin": "^5.42.1",
         "@typescript-eslint/parser": "^5.42.1",
         "eslint": "^8.27.0",

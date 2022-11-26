@@ -19,6 +19,8 @@ db.once("open", () => {
     console.log("connected to mongo DB");
 });
 app.use(express_1.default.static("public")); //מאפשר גישה לכל מה שנמצא בתקיית public
+const auth_route_js_1 = __importDefault(require("./routes/auth_route.js"));
+app.use("/auth", auth_route_js_1.default);
 const post_route_1 = __importDefault(require("./routes/post_route"));
 app.use("/post", post_route_1.default);
 module.exports = app;

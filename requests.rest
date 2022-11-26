@@ -4,6 +4,8 @@ GET http://localhost:3000/index
 ###
 
 GET http://localhost:3000/post
+Authorization: Jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzODIxYjljN2QyMDg0NGZiZTI2YzE1MCIsImlhdCI6MTY2OTQ3MTEzMywiZXhwIjoxNjY5NDc0NzMzfQ.rWn9ZVrpI12KY4XG8irLV8pfcN41Ej2mxPLaufV_2lo
+
 
 ###
 
@@ -16,10 +18,13 @@ GET http://localhost:3000/post/6366e9362564452f490d1750
 ###
 
 GET http://localhost:3000/post/6366e9362564452f490d175
+Authorization: Jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzODIxYjljN2QyMDg0NGZiZTI2YzE1MCIsImlhdCI6MTY2OTQ3MTEzMywiZXhwIjoxNjY5NDc0NzMzfQ.rWn9ZVrpI12KY4XG8irLV8pfcN41Ej2mxPLaufV_2lo
+
 
 ###
 
 POST http://localhost:3000/post
+Authorization: Jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzODIxYjljN2QyMDg0NGZiZTI2YzE1MCIsImlhdCI6MTY2OTQ3MTEzMywiZXhwIjoxNjY5NDc0NzMzfQ.rWn9ZVrpI12KY4XG8irLV8pfcN41Ej2mxPLaufV_2lo
 Content-Type: application/json
 
 {
@@ -35,4 +40,25 @@ Content-Type: application/json
 {
     "message": "this is the first updated message",
     "sender":"999000"
+}
+
+###
+POST http://localhost:3000/auth/login
+
+###
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+    "email":"user1@gmail.com",
+    "password":"12345"
+}
+
+###
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+    "email":"user1@gmail.com",
+    "password":"12345"
 }

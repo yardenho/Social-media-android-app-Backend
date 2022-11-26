@@ -1,13 +1,14 @@
 import express from "express";
 const router = express.Router();
 import post from "../controllers/post";
+import auth from "../controllers/auth.js";
 
-router.get("/", post.getAllPosts);
+router.get("/", auth.authenticateMiddleware, post.getAllPosts);
 
-router.get("/:id", post.getPostById);
+router.get("/:id", auth.authenticateMiddleware, post.getPostById);
 
-router.put("/:id", post.updatePostById);
+router.put("/:id", auth.authenticateMiddleware, post.updatePostById);
 
-router.post("/", post.addNewPost);
+router.post("/", auth.authenticateMiddleware, post.addNewPost);
 
 export default router;
