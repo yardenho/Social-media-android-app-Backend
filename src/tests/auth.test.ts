@@ -15,6 +15,8 @@ import User from "../models/user_model";
 const userEmail = "user1@gmail.com";
 const userPassword = "12345";
 let accessToken = "";
+let refreshToken = "";
+
 beforeAll(async () => {
     await Post.remove();
     await User.remove();
@@ -27,32 +29,17 @@ afterAll(async () => {
 });
 
 describe("Auth Tests ", () => {
+    test("Not authorized attemp test", async () => {
+        const response = await request(app).get("/post");
+        expect(response.statusCode).not.toEqual(200);
+    });
+
     test("register test", async () => {
         const response = await request(app).post("/auth/register").send({
             email: userEmail,
             password: userPassword,
         });
         expect(response.statusCode).toEqual(200);
-    });
-
-    test("login test", async () => {
-        let response = await request(app).post("/auth/login").send({
-            email: userEmail,
-            password: userPassword,
-        });
-        expect(response.statusCode).toEqual(200);
-        accessToken = response.body.accessToken;
-        expect(accessToken).not.toBeNull();
-
-        response = await request(app)
-            .get("/post")
-            .set("Authorization", "JWT " + accessToken);
-        expect(response.statusCode).toEqual(200);
-
-        response = await request(app)
-            .get("/post")
-            .set("Authorization", "JWT 1" + accessToken);
-        expect(response.statusCode).not.toEqual(200);
     });
 
     test("login test wrong password", async () => {
@@ -67,11 +54,61 @@ describe("Auth Tests ", () => {
         expect(access).toBeUndefined();
     });
 
-    test("logout test", async () => {
-        const response = await request(app).post("/auth/logout").send({
+    test("login test", async () => {
+        const response = await request(app).post("/auth/login").send({
             email: userEmail,
             password: userPassword,
         });
+        expect(response.statusCode).toEqual(200);
+        accessToken = response.body.accessToken;
+        expect(accessToken).not.toBeNull();
+        refreshToken = response.body.refreshToken;
+        expect(refreshToken).not.toBeNull();
+    });
+
+    test("login using valid access token ", async () => {
+        const response = await request(app)
+            .get("/post")
+            .set("Authorization", "JWT " + accessToken);
+        expect(response.statusCode).toEqual(200);
+    });
+
+    test("login using wrond access token ", async () => {
+        const response = await request(app)
+            .get("/post")
+            .set("Authorization", "JWT 1" + accessToken);
+        expect(response.statusCode).not.toEqual(200);
+    });
+
+    jest.setTimeout(30000);
+    test("test expeired token", async () => {
+        await new Promise((r) => setTimeout(r, 10000));
+        const response = await request(app)
+            .get("/post")
+            .set("Authorization", "JWT " + accessToken);
+        expect(response.statusCode).not.toEqual(200);
+    });
+
+    test("test refresh token", async () => {
+        let response = await request(app)
+            .get("/auth/refresh")
+            .set("Authorization", "JWT " + refreshToken);
+        expect(response.statusCode).toEqual(200);
+        const newAccessToken = response.body.accessToken;
+        expect(newAccessToken).not.toBeNull();
+        const newRefreshToken = response.body.refreshToken;
+        expect(newRefreshToken).not.toBeNull();
+
+        response = await request(app)
+            .get("/post")
+            .set("Authorization", "JWT " + newAccessToken);
+        expect(response.statusCode).toEqual(200);
+    });
+
+    test("logout test", async () => {
+        const response = await request(app)
+            .get("/auth/logout")
+            .set("Authorization", "JWT " + refreshToken);
         expect(response.statusCode).toEqual(200);
     });
 });

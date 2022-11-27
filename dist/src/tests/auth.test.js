@@ -26,6 +26,7 @@ const user_model_1 = __importDefault(require("../models/user_model"));
 const userEmail = "user1@gmail.com";
 const userPassword = "12345";
 let accessToken = "";
+let refreshToken = "";
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield post_model_1.default.remove();
     yield user_model_1.default.remove();
@@ -36,29 +37,16 @@ afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     mongoose_1.default.connection.close(); //צריך משום שהקונקשין הזה נשאר פתוח בסוף הטסטים ולכן חייב לסגור אותו
 }));
 describe("Auth Tests ", () => {
+    test("Not authorized attemp test", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(server_1.default).get("/post");
+        expect(response.statusCode).not.toEqual(200);
+    }));
     test("register test", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(server_1.default).post("/auth/register").send({
             email: userEmail,
             password: userPassword,
         });
         expect(response.statusCode).toEqual(200);
-    }));
-    test("login test", () => __awaiter(void 0, void 0, void 0, function* () {
-        let response = yield (0, supertest_1.default)(server_1.default).post("/auth/login").send({
-            email: userEmail,
-            password: userPassword,
-        });
-        expect(response.statusCode).toEqual(200);
-        accessToken = response.body.accessToken;
-        expect(accessToken).not.toBeNull();
-        response = yield (0, supertest_1.default)(server_1.default)
-            .get("/post")
-            .set("Authorization", "JWT " + accessToken);
-        expect(response.statusCode).toEqual(200);
-        response = yield (0, supertest_1.default)(server_1.default)
-            .get("/post")
-            .set("Authorization", "JWT 1" + accessToken);
-        expect(response.statusCode).not.toEqual(200);
     }));
     test("login test wrong password", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(server_1.default)
@@ -71,11 +59,55 @@ describe("Auth Tests ", () => {
         const access = response.body.accessToken;
         expect(access).toBeUndefined();
     }));
-    test("logout test", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(server_1.default).post("/auth/logout").send({
+    test("login test", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(server_1.default).post("/auth/login").send({
             email: userEmail,
             password: userPassword,
         });
+        expect(response.statusCode).toEqual(200);
+        accessToken = response.body.accessToken;
+        expect(accessToken).not.toBeNull();
+        refreshToken = response.body.refreshToken;
+        expect(refreshToken).not.toBeNull();
+    }));
+    test("login using valid access token ", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(server_1.default)
+            .get("/post")
+            .set("Authorization", "JWT " + accessToken);
+        expect(response.statusCode).toEqual(200);
+    }));
+    test("login using wrond access token ", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(server_1.default)
+            .get("/post")
+            .set("Authorization", "JWT 1" + accessToken);
+        expect(response.statusCode).not.toEqual(200);
+    }));
+    jest.setTimeout(30000);
+    test("test expeired token", () => __awaiter(void 0, void 0, void 0, function* () {
+        yield new Promise((r) => setTimeout(r, 10000));
+        const response = yield (0, supertest_1.default)(server_1.default)
+            .get("/post")
+            .set("Authorization", "JWT " + accessToken);
+        expect(response.statusCode).not.toEqual(200);
+    }));
+    test("test refresh token", () => __awaiter(void 0, void 0, void 0, function* () {
+        let response = yield (0, supertest_1.default)(server_1.default)
+            .get("/auth/refresh")
+            .set("Authorization", "JWT " + refreshToken);
+        expect(response.statusCode).toEqual(200);
+        const newAccessToken = response.body.accessToken;
+        expect(newAccessToken).not.toBeNull();
+        const newRefreshToken = response.body.refreshToken;
+        expect(newRefreshToken).not.toBeNull();
+        response = yield (0, supertest_1.default)(server_1.default)
+            .get("/post")
+            .set("Authorization", "JWT " + newAccessToken);
+        expect(response.statusCode).toEqual(200);
+    }));
+    test("logout test", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(server_1.default)
+            .get("/auth/logout")
+            .set("Authorization", "JWT " + refreshToken);
         expect(response.statusCode).toEqual(200);
     }));
 });
