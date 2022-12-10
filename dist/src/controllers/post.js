@@ -54,25 +54,12 @@ const getPostById = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(400).send({ error: "fail to get post from db" });
     }
 });
-const updatePostById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(req.params.id);
-    try {
-        const newPost = yield post_model_1.default.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
-        });
-        console.log("save post in db");
-        res.status(200).send(newPost);
-    }
-    catch (err) {
-        console.log("fail to save post in db");
-        res.status(400).send({ error: "fail adding new post to db" });
-    }
-});
 const putPostById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const post = yield post_model_1.default.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
         });
+        console.log("save post in db");
         res.status(200).send(post);
     }
     catch (err) {
@@ -84,7 +71,6 @@ module.exports = {
     getAllPosts,
     addNewPost,
     getPostById,
-    updatePostById,
     putPostById,
 };
 //# sourceMappingURL=post.js.map
