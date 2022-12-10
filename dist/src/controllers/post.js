@@ -68,10 +68,23 @@ const updatePostById = (req, res) => __awaiter(void 0, void 0, void 0, function*
         res.status(400).send({ error: "fail adding new post to db" });
     }
 });
+const putPostById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const post = yield post_model_1.default.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+        });
+        res.status(200).send(post);
+    }
+    catch (err) {
+        console.log("fail to update post in db");
+        res.status(400).send({ error: "fail adding new post to db" });
+    }
+});
 module.exports = {
     getAllPosts,
     addNewPost,
     getPostById,
     updatePostById,
+    putPostById,
 };
 //# sourceMappingURL=post.js.map

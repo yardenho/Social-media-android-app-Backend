@@ -46,28 +46,20 @@ const register = async (req: Request, res: Response) => {
     }
 };
 
-// type Tokens = {
-//     accessToken: string;
-//     refreshToken: string;
-// };
+async function generateTokens(userId: string) {
+    const accessToken = await jwt.sign(
+        { id: userId },
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: process.env.JWT_TOKEN_EXPIRATION }
+    );
 
-// async function generateTokens(userId: any): Promise<string> {
-//     const newAccessToken = await jwt.sign(
-//         { id: userId },
-//         process.env.ACCESS_TOKEN_SECRET,
-//         { expiresIn: process.env.JWT_TOKEN_EXPIRATION }
-//     );
+    const refreshToken = await jwt.sign(
+        { id: userId },
+        process.env.REFRESH_TOKEN_SECRET
+    );
 
-//     const newRefreshToken = await jwt.sign(
-//         { id: userId },
-//         process.env.REFRESH_TOKEN_SECRET
-//     );
-//     return new Promise((resolve) => {
-//         return userId;
-//     });
-
-//     // return new Promise<Token> { accessToken: newAccessToken, refreshToken: newRefreshToken };
-// }
+    return { accessToken: accessToken, refreshToken: refreshToken };
+}
 
 const login = async (req: Request, res: Response) => {
     const email = req.body.email;
@@ -85,24 +77,16 @@ const login = async (req: Request, res: Response) => {
             return sendError(res, "incorrect user or passsword");
         }
 
-        const accessToken = await jwt.sign(
-            { id: user._id },
-            process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: process.env.JWT_TOKEN_EXPIRATION }
-        );
+        const tokens = await generateTokens(user._id.toString());
 
-        const refreshToken = await jwt.sign(
-            { id: user._id },
-            process.env.REFRESH_TOKEN_SECRET
-        );
-        // const rc = await generateTokens(user._id);
-        if (user.refresh_tokens == null) user.refresh_tokens = [refreshToken];
-        else user.refresh_tokens.push(refreshToken);
+        if (user.refresh_tokens == null)
+            user.refresh_tokens = [tokens.refreshToken];
+        else user.refresh_tokens.push(tokens.refreshToken);
         await user.save();
 
         res.status(200).send({
-            accessToken: accessToken,
-            refreshToken: refreshToken,
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken,
         });
     } catch (err) {
         console.log("error:" + err);
@@ -133,23 +117,26 @@ const refresh = async (req: Request, res: Response) => {
             return sendError(res, "authentication missing");
         }
 
-        const newAccessToken = await jwt.sign(
-            { id: user._id },
-            process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: process.env.JWT_TOKEN_EXPIRATION }
-        );
+        // const newAccessToken = await jwt.sign(
+        //     { id: user._id },
+        //     process.env.ACCESS_TOKEN_SECRET,
+        //     { expiresIn: process.env.JWT_TOKEN_EXPIRATION }
+        // );
 
-        const newRefreshToken = await jwt.sign(
-            { id: user._id },
-            process.env.REFRESH_TOKEN_SECRET
-        );
-        userObj.refresh_tokens[userObj.refresh_tokens.indexOf(refreshToken)];
+        // const newRefreshToken = await jwt.sign(
+        //     { id: user._id },
+        //     process.env.REFRESH_TOKEN_SECRET
+        // );
+
+        const tokens = await generateTokens(userObj._id.toString());
+
+        userObj.refresh_tokens[userObj.refresh_tokens.indexOf(refreshToken)] =
+            tokens.refreshToken;
+        console.log("refresh token: " + refreshToken);
+        console.log("with token: " + tokens.refreshToken);
         await userObj.save();
 
-        return res.status(200).send({
-            accessToken: newAccessToken,
-            refreshToken: newRefreshToken,
-        });
+        return res.status(200).send(tokens);
     } catch (err) {
         return sendError(res, "fail validation token");
     }

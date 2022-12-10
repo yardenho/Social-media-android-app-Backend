@@ -94,14 +94,14 @@ describe("Auth Tests ", () => {
             .get("/auth/refresh")
             .set("Authorization", "JWT " + refreshToken);
         expect(response.statusCode).toEqual(200);
-        const newAccessToken = response.body.accessToken;
-        expect(newAccessToken).not.toBeNull();
-        const newRefreshToken = response.body.refreshToken;
-        expect(newRefreshToken).not.toBeNull();
+        accessToken = response.body.accessToken;
+        expect(accessToken).not.toBeNull();
+        refreshToken = response.body.refreshToken;
+        expect(refreshToken).not.toBeNull();
 
         response = await request(app)
             .get("/post")
-            .set("Authorization", "JWT " + newAccessToken);
+            .set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).toEqual(200);
     });
 

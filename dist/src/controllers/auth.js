@@ -50,25 +50,13 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return sendError(res, "fail registration");
     }
 });
-// type Tokens = {
-//     accessToken: string;
-//     refreshToken: string;
-// };
-// async function generateTokens(userId: any): Promise<string> {
-//     const newAccessToken = await jwt.sign(
-//         { id: userId },
-//         process.env.ACCESS_TOKEN_SECRET,
-//         { expiresIn: process.env.JWT_TOKEN_EXPIRATION }
-//     );
-//     const newRefreshToken = await jwt.sign(
-//         { id: userId },
-//         process.env.REFRESH_TOKEN_SECRET
-//     );
-//     return new Promise((resolve) => {
-//         return userId;
-//     });
-//     // return new Promise<Token> { accessToken: newAccessToken, refreshToken: newRefreshToken };
-// }
+function generateTokens(userId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const accessToken = yield jsonwebtoken_1.default.sign({ id: userId }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.JWT_TOKEN_EXPIRATION });
+        const refreshToken = yield jsonwebtoken_1.default.sign({ id: userId }, process.env.REFRESH_TOKEN_SECRET);
+        return { accessToken: accessToken, refreshToken: refreshToken };
+    });
+}
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const email = req.body.email;
     const password = req.body.password;
@@ -84,17 +72,15 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (!match) {
             return sendError(res, "incorrect user or passsword");
         }
-        const accessToken = yield jsonwebtoken_1.default.sign({ id: user._id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.JWT_TOKEN_EXPIRATION });
-        const refreshToken = yield jsonwebtoken_1.default.sign({ id: user._id }, process.env.REFRESH_TOKEN_SECRET);
-        // const rc = await generateTokens(user._id);
+        const tokens = yield generateTokens(user._id.toString());
         if (user.refresh_tokens == null)
-            user.refresh_tokens = [refreshToken];
+            user.refresh_tokens = [tokens.refreshToken];
         else
-            user.refresh_tokens.push(refreshToken);
+            user.refresh_tokens.push(tokens.refreshToken);
         yield user.save();
         res.status(200).send({
-            accessToken: accessToken,
-            refreshToken: refreshToken,
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken,
         });
     }
     catch (err) {
@@ -122,14 +108,22 @@ const refresh = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             yield userObj.save();
             return sendError(res, "authentication missing");
         }
-        const newAccessToken = yield jsonwebtoken_1.default.sign({ id: user._id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.JWT_TOKEN_EXPIRATION });
-        const newRefreshToken = yield jsonwebtoken_1.default.sign({ id: user._id }, process.env.REFRESH_TOKEN_SECRET);
-        userObj.refresh_tokens[userObj.refresh_tokens.indexOf(refreshToken)];
+        // const newAccessToken = await jwt.sign(
+        //     { id: user._id },
+        //     process.env.ACCESS_TOKEN_SECRET,
+        //     { expiresIn: process.env.JWT_TOKEN_EXPIRATION }
+        // );
+        // const newRefreshToken = await jwt.sign(
+        //     { id: user._id },
+        //     process.env.REFRESH_TOKEN_SECRET
+        // );
+        const tokens = yield generateTokens(userObj._id.toString());
+        userObj.refresh_tokens[userObj.refresh_tokens.indexOf(refreshToken)] =
+            tokens.refreshToken;
+        console.log("refresh token: " + refreshToken);
+        console.log("with token: " + tokens.refreshToken);
         yield userObj.save();
-        return res.status(200).send({
-            accessToken: newAccessToken,
-            refreshToken: newRefreshToken,
-        });
+        return res.status(200).send(tokens);
     }
     catch (err) {
         return sendError(res, "fail validation token");
