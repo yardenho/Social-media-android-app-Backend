@@ -32,7 +32,7 @@ const addNewPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     //save in DB
     const post = new post_model_1.default({
         message: req.body.message,
-        sender: req.body.sender,
+        sender: req.body.userId, //extract the user id from the auth ,
     });
     try {
         const newPost = yield post.save();

@@ -4,14 +4,6 @@ import mongoose from "mongoose";
 import Post from "../models/post_model";
 import User from "../models/user_model";
 
-//variables for testing
-// const firstPostMessage = "this is the first new test post message";
-// const firstPostSender = "999000";
-// const newPostMessageUpdated =
-//     "this is the updated first new test post message !!!";
-
-// let receivedFirstPostId = "";
-
 const userEmail = "user1@gmail.com";
 const userPassword = "12345";
 let accessToken = "";
@@ -80,9 +72,9 @@ describe("Auth Tests ", () => {
         expect(response.statusCode).not.toEqual(200);
     });
 
-    jest.setTimeout(30000);
+    jest.setTimeout(15000);
     test("test expeired token", async () => {
-        await new Promise((r) => setTimeout(r, 10000));
+        await new Promise((r) => setTimeout(r, 6000));
         const response = await request(app)
             .get("/post")
             .set("Authorization", "JWT " + accessToken);

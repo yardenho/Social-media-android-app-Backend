@@ -26,21 +26,19 @@ const register = async (req: Request, res: Response) => {
                 "user already registered, try a different name"
             );
         }
-    } catch (err) {
-        console.log("error:" + err);
-        return sendError(res, "fail checking user");
-    }
 
-    //create the new user
-    try {
+        //create the new user
         const salt = await bcrypt.genSalt(10);
         const encryptedPwd = await bcrypt.hash(password, salt);
-        let newUser = new User({
+        const newUser = new User({
             email: email,
             password: encryptedPwd,
         });
-        newUser = await newUser.save();
-        res.status(200).send(newUser);
+        await newUser.save();
+        return res.status(200).send({
+            email: email,
+            _id: newUser._id,
+        });
     } catch (err) {
         return sendError(res, "fail registration");
     }
@@ -84,10 +82,7 @@ const login = async (req: Request, res: Response) => {
         else user.refresh_tokens.push(tokens.refreshToken);
         await user.save();
 
-        res.status(200).send({
-            accessToken: tokens.accessToken,
-            refreshToken: tokens.refreshToken,
-        });
+        return res.status(200).send(tokens);
     } catch (err) {
         console.log("error:" + err);
         return sendError(res, "fail checking user");
@@ -116,17 +111,6 @@ const refresh = async (req: Request, res: Response) => {
             await userObj.save();
             return sendError(res, "authentication missing");
         }
-
-        // const newAccessToken = await jwt.sign(
-        //     { id: user._id },
-        //     process.env.ACCESS_TOKEN_SECRET,
-        //     { expiresIn: process.env.JWT_TOKEN_EXPIRATION }
-        // );
-
-        // const newRefreshToken = await jwt.sign(
-        //     { id: user._id },
-        //     process.env.REFRESH_TOKEN_SECRET
-        // );
 
         const tokens = await generateTokens(userObj._id.toString());
 
@@ -164,7 +148,7 @@ const logout = async (req: Request, res: Response) => {
             1
         );
         await userObj.save();
-        res.status(200).send();
+        return res.status(200).send();
     } catch (err) {
         return sendError(res, "fail validation token");
     }
@@ -185,7 +169,7 @@ const authenticateMiddleware = async (
         )) as JwtPayload;
         req.body.userId = user.id;
         console.log("token user: " + user);
-        next();
+        return next();
     } catch (err) {
         return sendError(res, "fail validation token");
     }

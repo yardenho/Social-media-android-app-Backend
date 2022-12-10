@@ -30,21 +30,18 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         if (user != null) {
             return sendError(res, "user already registered, try a different name");
         }
-    }
-    catch (err) {
-        console.log("error:" + err);
-        return sendError(res, "fail checking user");
-    }
-    //create the new user
-    try {
+        //create the new user
         const salt = yield bcrypt_1.default.genSalt(10);
         const encryptedPwd = yield bcrypt_1.default.hash(password, salt);
-        let newUser = new user_model_1.default({
+        const newUser = new user_model_1.default({
             email: email,
             password: encryptedPwd,
         });
-        newUser = yield newUser.save();
-        res.status(200).send(newUser);
+        yield newUser.save();
+        return res.status(200).send({
+            email: email,
+            _id: newUser._id,
+        });
     }
     catch (err) {
         return sendError(res, "fail registration");
@@ -78,10 +75,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         else
             user.refresh_tokens.push(tokens.refreshToken);
         yield user.save();
-        res.status(200).send({
-            accessToken: tokens.accessToken,
-            refreshToken: tokens.refreshToken,
-        });
+        return res.status(200).send(tokens);
     }
     catch (err) {
         console.log("error:" + err);
@@ -108,15 +102,6 @@ const refresh = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             yield userObj.save();
             return sendError(res, "authentication missing");
         }
-        // const newAccessToken = await jwt.sign(
-        //     { id: user._id },
-        //     process.env.ACCESS_TOKEN_SECRET,
-        //     { expiresIn: process.env.JWT_TOKEN_EXPIRATION }
-        // );
-        // const newRefreshToken = await jwt.sign(
-        //     { id: user._id },
-        //     process.env.REFRESH_TOKEN_SECRET
-        // );
         const tokens = yield generateTokens(userObj._id.toString());
         userObj.refresh_tokens[userObj.refresh_tokens.indexOf(refreshToken)] =
             tokens.refreshToken;
@@ -145,7 +130,7 @@ const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
         userObj.refresh_tokens.splice(userObj.refresh_tokens.indexOf(refreshToken), 1);
         yield userObj.save();
-        res.status(200).send();
+        return res.status(200).send();
     }
     catch (err) {
         return sendError(res, "fail validation token");
@@ -159,7 +144,7 @@ const authenticateMiddleware = (req, res, next) => __awaiter(void 0, void 0, voi
         const user = (yield jsonwebtoken_1.default.verify(token, process.env.ACCESS_TOKEN_SECRET));
         req.body.userId = user.id;
         console.log("token user: " + user);
-        next();
+        return next();
     }
     catch (err) {
         return sendError(res, "fail validation token");

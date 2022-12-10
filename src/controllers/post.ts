@@ -22,7 +22,7 @@ const addNewPost = async (req: Request, res: Response) => {
 
     const post = new Post({
         message: req.body.message,
-        sender: req.body.sender,
+        sender: req.body.userId, //extract the user id from the auth ,
     });
 
     try {

@@ -17,12 +17,6 @@ const server_1 = __importDefault(require("../server")); //צריך לשלוח א
 const mongoose_1 = __importDefault(require("mongoose"));
 const post_model_1 = __importDefault(require("../models/post_model"));
 const user_model_1 = __importDefault(require("../models/user_model"));
-//variables for testing
-// const firstPostMessage = "this is the first new test post message";
-// const firstPostSender = "999000";
-// const newPostMessageUpdated =
-//     "this is the updated first new test post message !!!";
-// let receivedFirstPostId = "";
 const userEmail = "user1@gmail.com";
 const userPassword = "12345";
 let accessToken = "";
@@ -82,9 +76,9 @@ describe("Auth Tests ", () => {
             .set("Authorization", "JWT 1" + accessToken);
         expect(response.statusCode).not.toEqual(200);
     }));
-    jest.setTimeout(30000);
+    jest.setTimeout(15000);
     test("test expeired token", () => __awaiter(void 0, void 0, void 0, function* () {
-        yield new Promise((r) => setTimeout(r, 10000));
+        yield new Promise((r) => setTimeout(r, 6000));
         const response = yield (0, supertest_1.default)(server_1.default)
             .get("/post")
             .set("Authorization", "JWT " + accessToken);
