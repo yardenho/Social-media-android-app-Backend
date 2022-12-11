@@ -1,7 +1,7 @@
 import User from "../models/user_model";
 import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcrypt";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 function sendError(res: Response, msg: string) {
     res.status(400).send({ error: msg });
