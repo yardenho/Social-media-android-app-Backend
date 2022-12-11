@@ -2,7 +2,6 @@ import User from "../models/user_model";
 import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { StringSchemaDefinition } from "mongoose";
 
 function sendError(res: Response, msg: string) {
     res.status(400).send({ error: msg });
@@ -95,15 +94,18 @@ function getTokenFromRequest(req: Request): string {
     return authHeaders.split(" ")[1];
 }
 
+type TokenInfo = {
+    id: string;
+};
+
 const refresh = async (req: Request, res: Response) => {
     const refreshToken = getTokenFromRequest(req);
     if (refreshToken == null) return sendError(res, "authentication missing");
 
     try {
-        const user = (await jwt.verify(
-            refreshToken,
-            process.env.REFRESH_TOKEN_SECRET
-        )) as JwtPayload;
+        const user: TokenInfo = <TokenInfo>(
+            jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
+        );
         const userObj = await User.findById(user.id);
         if (userObj == null) return sendError(res, "fail validation token");
         if (!userObj.refresh_tokens.includes(refreshToken)) {
@@ -131,10 +133,9 @@ const logout = async (req: Request, res: Response) => {
     if (refreshToken == null) return sendError(res, "authentication missing");
 
     try {
-        const user = (await jwt.verify(
-            refreshToken,
-            process.env.REFRESH_TOKEN_SECRET
-        )) as JwtPayload;
+        const user = <TokenInfo>(
+            jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
+        );
         const userObj = await User.findById(user.id);
         if (userObj == null) return sendError(res, "fail validation token");
         if (!userObj.refresh_tokens.includes(refreshToken)) {
@@ -163,10 +164,9 @@ const authenticateMiddleware = async (
     if (token == null) return sendError(res, "authentication missing");
 
     try {
-        const user = (await jwt.verify(
-            token,
-            process.env.ACCESS_TOKEN_SECRET
-        )) as JwtPayload;
+        const user = <TokenInfo>(
+            jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+        );
         req.body.userId = user.id;
         console.log("token user: " + user);
         return next();
