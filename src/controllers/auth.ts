@@ -44,13 +44,13 @@ const register = async (req: Request, res: Response) => {
 };
 
 async function generateTokens(userId: string) {
-    const accessToken = await jwt.sign(
+    const accessToken = jwt.sign(
         { id: userId },
         process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: process.env.JWT_TOKEN_EXPIRATION }
     );
 
-    const refreshToken = await jwt.sign(
+    const refreshToken = jwt.sign(
         { id: userId },
         process.env.REFRESH_TOKEN_SECRET
     );

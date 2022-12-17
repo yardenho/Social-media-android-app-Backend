@@ -1,9 +1,9 @@
 import { Server } from "socket.io";
 import http from "http";
-import echoHandler from "./socket/echoHandler";
-import postHandler from "./socket/echoHandler";
-
 import jwt from "jsonwebtoken";
+import echoHandler from "./socket/echoHandler";
+import postHandler from "./socket/postHandler";
+
 export = (server: http.Server) => {
     const io = new Server(server);
     //עבור פתיחת הסוקט

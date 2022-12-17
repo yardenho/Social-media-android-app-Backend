@@ -50,10 +50,8 @@ describe("my awesome project", () => {
     });
 
     test("should work", (done) => {
-        clientSocket.removeAllListeners();
-        clientSocket.on("echo:echo", (eventName, arg) => {
+        clientSocket.once("echo:echo_res", (arg) => {
             console.log("echo:echo");
-            expect(eventName).toBe("echo:echo");
             expect(arg.msg).toBe("hello");
             done();
         });
@@ -61,10 +59,8 @@ describe("my awesome project", () => {
     });
 
     test("Post get all test", (done) => {
-        clientSocket.removeAllListeners();
-        clientSocket.on("post:get_all", (eventName, arg) => {
-            console.log("post:get_all" + arg);
-            expect(eventName).toBe("post:get_all");
+        clientSocket.once("post:get_all", (arg) => {
+            console.log("on any" + arg);
             expect(arg.status).toBe("OK");
             done();
         });

@@ -6,7 +6,9 @@ export = (
     socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap>
 ) => {
     const echoHandler = (payload) => {
-        socket.emit("echo:echo", payload);
+        console.log("echoHandler emit echo:echo_res ");
+
+        socket.emit("echo:echo_res", payload);
     };
     const readHandler = (payload) => {
         // ...

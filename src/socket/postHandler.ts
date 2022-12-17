@@ -7,7 +7,7 @@ export = (
     socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap>
 ) => {
     const getAllPosts = async () => {
-        console.log("in get all posts handler");
+        console.log("get all posts handler");
         const res = await postController.getAllPostsEvent();
         socket.emit("post:get_all", res);
     };
