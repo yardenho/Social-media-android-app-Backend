@@ -29,8 +29,8 @@ const getAllPosts = async (req: Request, res: Response) => {
 
 const addNewPost = async (req: Request, res: Response) => {
     console.log(req.body);
-    //save in DB
 
+    //save in DB
     const post = new Post({
         message: req.body.message,
         sender: req.body.userId, //extract the user id from the auth ,
