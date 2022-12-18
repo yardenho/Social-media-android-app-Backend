@@ -20,4 +20,4 @@ class response {
         }
     }
 }
-module.exports = response;
+export = response;

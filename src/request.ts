@@ -10,4 +10,4 @@ class request {
         return new request(req.body, req.user._id);
     }
 }
-module.exports = request;
+export = request;

@@ -6,4 +6,4 @@ class error {
         this.message = message;
     }
 }
-module.exports = error;
+export = error;
