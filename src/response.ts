@@ -1,3 +1,5 @@
+import { Response } from "express";
+
 class response {
     body = {};
     userId = null;
@@ -5,8 +7,9 @@ class response {
     constructor(body, userId, err) {
         this.body = body;
         this.userId = userId;
+        this.err = err;
     }
-    sendRestResponse(res) {
+    sendRestResponse(res: Response) {
         if (this.err == null) {
             res.status(200).send({
                 status: "ok",

@@ -18,7 +18,9 @@ type Client = {
     id: string;
 };
 
-function clientSocketConnect(clientSocket): Promise<string> {
+function clientSocketConnect(
+    clientSocket: Socket<DefaultEventsMap, DefaultEventsMap>
+): Promise<string> {
     return new Promise((resolve) => {
         clientSocket.on("connect", () => {
             resolve("1");
@@ -54,6 +56,7 @@ const connectUser = async (userEmail: string, userPassword: string) => {
 };
 
 describe("my awesome project", () => {
+    jest.setTimeout(15000);
     beforeAll(async () => {
         await Post.remove();
         await User.remove();

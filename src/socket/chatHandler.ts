@@ -6,7 +6,7 @@ export = (
     io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap>,
     socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap>
 ) => {
-    //message {'to': destination user id
+    //message {'to': destination user id,
     //          'nessage': message to send}
 
     const sendMessage = (payload) => {
