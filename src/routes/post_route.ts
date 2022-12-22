@@ -61,9 +61,7 @@ import request from "../request";
 // router.get("/", auth.authenticateMiddleware, post.getAllPosts);
 router.get("/", auth.authenticateMiddleware, async (req, res) => {
     try {
-        const response = await post.newGetAllPosts(
-            request.fromRestRequest(req)
-        );
+        const response = await post.getAllPosts(request.fromRestRequest(req));
         response.sendRestResponse(res);
     } catch (err) {
         res.status(400).send({

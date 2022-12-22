@@ -70,7 +70,7 @@ const request_1 = __importDefault(require("../request"));
 // router.get("/", auth.authenticateMiddleware, post.getAllPosts);
 router.get("/", auth_js_1.default.authenticateMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const response = yield post_1.default.newGetAllPosts(request_1.default.fromRestRequest(req));
+        const response = yield post_1.default.getAllPosts(request_1.default.fromRestRequest(req));
         response.sendRestResponse(res);
     }
     catch (err) {

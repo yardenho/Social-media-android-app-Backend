@@ -7,19 +7,19 @@ export = (
     io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap>,
     socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap>
 ) => {
-    const getAllPosts = async () => {
-        console.log("get all posts handler");
-        const res = await postController.getAllPostsEvent();
-        socket.emit("post:get_all", res);
-    };
+    // const getAllPosts = async () => {
+    //     console.log("get all posts handler");
+    //     const res = await postController.getAllPosts();
+    //     socket.emit("post:get_all", res);
+    // };
 
-    const newGetAllPosts = async (body) => {
+    const getAllPosts = async (body) => {
         console.log(
             "get all posts handler with socketId: %s",
             socket.data.user
         );
         try {
-            const response = await postController.newGetAllPosts(
+            const response = await postController.getAllPosts(
                 new request(body, socket.data.user, null)
             );
             console.log("trying to send post:get_all.response");
@@ -38,7 +38,7 @@ export = (
     };
 
     console.log("register echo handlers");
-    socket.on("post:get_all", newGetAllPosts);
+    socket.on("post:get_all", getAllPosts);
     socket.on("post:get_by_id", getPostById);
     socket.on("post:add_new", addNewPost);
 };

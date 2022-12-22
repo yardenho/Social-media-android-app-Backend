@@ -4,7 +4,7 @@ import request from "../request";
 import response from "../response";
 import error from "../error";
 
-const newGetAllPosts = async (req: request) => {
+const getAllPosts = async (req: request) => {
     // implement the get all posts with specific sender
     try {
         let posts = {};
@@ -20,31 +20,31 @@ const newGetAllPosts = async (req: request) => {
     }
 };
 
-const getAllPostsEvent = async () => {
-    console.log("");
-    try {
-        const posts = await Post.find();
-        return { status: "OK", data: posts };
-    } catch (err) {
-        console.log("err");
-        return { status: "FAIL", data: "" };
-    }
-};
+// const getAllPostsEvent = async () => {
+//     console.log("");
+//     try {
+//         const posts = await Post.find();
+//         return { status: "OK", data: posts };
+//     } catch (err) {
+//         console.log("err");
+//         return { status: "FAIL", data: "" };
+//     }
+// };
 
-const getAllPosts = async (req: Request, res: Response) => {
-    try {
-        let posts = {};
-        if (req.query.sender == null) {
-            posts = await Post.find();
-        } else {
-            posts = await Post.find({ sender: req.query.sender });
-        }
+// const getAllPosts = async (req: Request, res: Response) => {
+//     try {
+//         let posts = {};
+//         if (req.query.sender == null) {
+//             posts = await Post.find();
+//         } else {
+//             posts = await Post.find({ sender: req.query.sender });
+//         }
 
-        res.status(200).send(posts);
-    } catch (err) {
-        res.status(400).send({ error: "fail to get posts from db" });
-    }
-};
+//         res.status(200).send(posts);
+//     } catch (err) {
+//         res.status(400).send({ error: "fail to get posts from db" });
+//     }
+// };
 
 const addNewPost = async (req: Request, res: Response) => {
     console.log(req.body);
@@ -90,8 +90,6 @@ const putPostById = async (req: Request, res: Response) => {
 };
 
 export = {
-    newGetAllPosts,
-    getAllPostsEvent,
     getAllPosts,
     addNewPost,
     getPostById,
