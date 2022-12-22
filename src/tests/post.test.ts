@@ -65,8 +65,8 @@ describe("Posts Tests ", () => {
             .get("/post")
             .set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).toEqual(200);
-        expect(response.body[0].message).toEqual(firstPostMessage);
-        expect(response.body[0].sender).toEqual(firstPostSender);
+        expect(response.body.post[0].message).toEqual(firstPostMessage);
+        expect(response.body.post[0].sender).toEqual(firstPostSender);
     });
 
     test("get post by Id", async () => {
@@ -91,8 +91,8 @@ describe("Posts Tests ", () => {
             .set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).toEqual(200);
         console.log(response.body);
-        expect(response.body[0].message).toEqual(firstPostMessage);
-        expect(response.body[0].sender).toEqual(firstPostSender);
+        expect(response.body.post[0].message).toEqual(firstPostMessage);
+        expect(response.body.post[0].sender).toEqual(firstPostSender);
     });
 
     test("get post by wrong sender", async () => {
@@ -101,7 +101,7 @@ describe("Posts Tests ", () => {
             .set("Authorization", "JWT " + accessToken);
         console.log(response.body);
         expect(response.statusCode).toEqual(200);
-        expect(response.body.length).toEqual(0);
+        expect(response.body.post.length).toEqual(0);
     });
 
     test("update post by Id", async () => {

@@ -12,6 +12,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 const post_model_1 = __importDefault(require("../models/post_model"));
+const response_1 = __importDefault(require("../response"));
+const error_1 = __importDefault(require("../error"));
+const newGetAllPosts = (req) => __awaiter(void 0, void 0, void 0, function* () {
+    // implement the get all posts with specific sender
+    try {
+        let posts = {};
+        if (req.query != null && req.query.sender != null) {
+            posts = yield post_model_1.default.find({ sender: req.query.sender });
+        }
+        else {
+            posts = yield post_model_1.default.find();
+        }
+        return new response_1.default(posts, req.userId, null);
+    }
+    catch (err) {
+        console.log("err");
+        return new response_1.default(null, req.userId, new error_1.default(400, err.message));
+    }
+});
 const getAllPostsEvent = () => __awaiter(void 0, void 0, void 0, function* () {
     console.log("");
     try {
@@ -79,6 +98,7 @@ const putPostById = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 module.exports = {
+    newGetAllPosts,
     getAllPostsEvent,
     getAllPosts,
     addNewPost,

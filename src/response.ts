@@ -4,10 +4,13 @@ class response {
     body = {};
     userId = null;
     err = null;
+    status = null;
     constructor(body, userId, err) {
         this.body = body;
         this.userId = userId;
         this.err = err;
+        if (err == null) this.status = "ok";
+        else this.status = "fail";
     }
     sendRestResponse(res: Response) {
         if (this.err == null) {

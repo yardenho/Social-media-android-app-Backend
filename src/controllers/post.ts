@@ -1,5 +1,24 @@
 import Post from "../models/post_model";
 import { Request, Response } from "express";
+import request from "../request";
+import response from "../response";
+import error from "../error";
+
+const newGetAllPosts = async (req: request) => {
+    // implement the get all posts with specific sender
+    try {
+        let posts = {};
+        if (req.query != null && req.query.sender != null) {
+            posts = await Post.find({ sender: req.query.sender });
+        } else {
+            posts = await Post.find();
+        }
+        return new response(posts, req.userId, null);
+    } catch (err) {
+        console.log("err");
+        return new response(null, req.userId, new error(400, err.message));
+    }
+};
 
 const getAllPostsEvent = async () => {
     console.log("");
@@ -71,6 +90,7 @@ const putPostById = async (req: Request, res: Response) => {
 };
 
 export = {
+    newGetAllPosts,
     getAllPostsEvent,
     getAllPosts,
     addNewPost,

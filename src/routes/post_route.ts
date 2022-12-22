@@ -9,6 +9,7 @@ import express from "express";
 const router = express.Router();
 import post from "../controllers/post";
 import auth from "../controllers/auth.js";
+import request from "../request";
 
 /**
  * @swagger
@@ -57,7 +58,20 @@ import auth from "../controllers/auth.js";
  *
  */
 
-router.get("/", auth.authenticateMiddleware, post.getAllPosts);
+// router.get("/", auth.authenticateMiddleware, post.getAllPosts);
+router.get("/", auth.authenticateMiddleware, async (req, res) => {
+    try {
+        const response = await post.newGetAllPosts(
+            request.fromRestRequest(req)
+        );
+        response.sendRestResponse(res);
+    } catch (err) {
+        res.status(400).send({
+            status: "fail",
+            message: err.message,
+        });
+    }
+});
 
 /**
  * @swagger

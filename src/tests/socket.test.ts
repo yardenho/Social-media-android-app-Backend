@@ -81,9 +81,9 @@ describe("my awesome project", () => {
     });
 
     test("Post get all test", (done) => {
-        client1.socket.once("post:get_all", (arg) => {
+        client1.socket.once("post:get_all.response", (arg) => {
             console.log("on any" + arg);
-            expect(arg.status).toBe("OK");
+            expect(arg.status).toBe("ok");
             done();
         });
         console.log("test post get all");
