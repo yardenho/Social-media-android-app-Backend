@@ -69,9 +69,11 @@ describe("my awesome project", () => {
         client2 = await connectUser(userEmail2, userPassword2);
     });
 
-    afterAll(() => {
+    afterAll(async () => {
         client1.socket.close();
         client2.socket.close();
+        await Post.remove();
+        await User.remove();
         server.close();
         mongoose.connection.close();
     });
