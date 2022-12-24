@@ -96,10 +96,10 @@ describe("my awesome project", () => {
     test("Post add new test", (done) => {
         client1.socket.once("post:post.response", (arg) => {
             console.log("on any" + arg);
-            expect(arg.body["message"]).toBe(firstPostMessage);
-            expect(arg.body["sender"]).toBe(client1.id);
+            expect(arg.body.message).toBe(firstPostMessage);
+            expect(arg.body.sender).toBe(client1.id);
             expect(arg.status).toBe("ok");
-            newPostId = arg.body["_id"];
+            newPostId = arg.body._id;
             done();
         });
         console.log("test post add new post");
@@ -112,14 +112,28 @@ describe("my awesome project", () => {
     test("Post get by id test", (done) => {
         client1.socket.once("post:get:id.response", (arg) => {
             console.log("on any" + arg);
-            expect(arg.body["message"]).toBe(firstPostMessage);
-            expect(arg.body["sender"]).toBe(client1.id);
+            expect(arg.body.message).toBe(firstPostMessage);
+            expect(arg.body.sender).toBe(client1.id);
             expect(arg.status).toBe("ok");
             done();
         });
-        console.log("test post add new post");
+        console.log("test post get by id");
         client1.socket.emit("post:get:id", {
             id: newPostId,
+        });
+    });
+
+    test("Post get by sender test", (done) => {
+        client1.socket.once("post:get:sender.response", (arg) => {
+            console.log("on any" + arg);
+            expect(arg.body[0].message).toBe(firstPostMessage);
+            expect(arg.body[0].sender).toBe(client1.id);
+            expect(arg.status).toBe("ok");
+            done();
+        });
+        console.log("test post get by sender");
+        client1.socket.emit("post:get:sender", {
+            sender: client1.id,
         });
     });
 

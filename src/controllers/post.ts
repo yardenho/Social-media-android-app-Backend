@@ -49,17 +49,6 @@ const getPostById = async (req: request) => {
     }
 };
 
-// const getPostById = async (req: Request, res: Response) => {
-//     console.log(req.params._id);
-
-//     try {
-//         const posts = await Post.findById(req.params._id);
-//         res.status(200).send(posts);
-//     } catch (err) {
-//         res.status(400).send({ error: "fail to get post from db" });
-//     }
-// };
-
 const putPostById = async (req: Request, res: Response) => {
     try {
         const post = await Post.findByIdAndUpdate(req.params.id, req.body, {

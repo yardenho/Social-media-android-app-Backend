@@ -58,15 +58,6 @@ const getPostById = (req) => __awaiter(void 0, void 0, void 0, function* () {
         return new response_1.default(null, req.userId, new error_1.default(400, err.message));
     }
 });
-// const getPostById = async (req: Request, res: Response) => {
-//     console.log(req.params._id);
-//     try {
-//         const posts = await Post.findById(req.params._id);
-//         res.status(200).send(posts);
-//     } catch (err) {
-//         res.status(400).send({ error: "fail to get post from db" });
-//     }
-// };
 const putPostById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const post = yield post_model_1.default.findByIdAndUpdate(req.params.id, req.body, {

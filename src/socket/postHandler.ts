@@ -52,8 +52,25 @@ export = (
         }
     };
 
+    const getPostBySender = async (body) => {
+        console.log(
+            "get post by sender handler with socketId: %s",
+            socket.data.user
+        );
+        try {
+            const response = await postController.getAllPosts(
+                new request(body, socket.data.user, body, null)
+            );
+            console.log("trying to send post:get:sender.response");
+            socket.emit("post:get:sender.response", response);
+        } catch (err) {
+            socket.emit("post:get:sender.response", { status: "fail" });
+        }
+    };
+
     console.log("register echo handlers");
     socket.on("post:get", getAllPosts);
-    socket.on("post:get:id", getPostById);
     socket.on("post:post", addNewPost);
+    socket.on("post:get:id", getPostById);
+    socket.on("post:get:sender", getPostBySender);
 };
