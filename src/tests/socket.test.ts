@@ -6,6 +6,9 @@ import request from "supertest";
 import Post from "../models/post_model";
 import User from "../models/user_model";
 
+const firstPostMessage = "this is the first new test post message";
+let newPostId = "";
+
 const userEmail = "user1@gmail.com";
 const userPassword = "12345";
 
@@ -90,6 +93,36 @@ describe("my awesome project", () => {
         client1.socket.emit("post:get", "stam");
     });
 
+    test("Post add new test", (done) => {
+        client1.socket.once("post:post.response", (arg) => {
+            console.log("on any" + arg);
+            expect(arg.body["message"]).toBe(firstPostMessage);
+            expect(arg.body["sender"]).toBe(client1.id);
+            expect(arg.status).toBe("ok");
+            newPostId = arg.body["_id"];
+            done();
+        });
+        console.log("test post add new post");
+        client1.socket.emit("post:post", {
+            message: firstPostMessage,
+            sender: client1.id,
+        });
+    });
+
+    test("Post get by id test", (done) => {
+        client1.socket.once("post:get:id.response", (arg) => {
+            console.log("on any" + arg);
+            expect(arg.body["message"]).toBe(firstPostMessage);
+            expect(arg.body["sender"]).toBe(client1.id);
+            expect(arg.status).toBe("ok");
+            done();
+        });
+        console.log("test post add new post");
+        client1.socket.emit("post:get:id", {
+            id: newPostId,
+        });
+    });
+
     test("test chat messages", (done) => {
         const message = "hi... test 123";
         client2.socket.once("chat:message", (arg) => {
@@ -98,7 +131,7 @@ describe("my awesome project", () => {
             expect(arg.from).toBe(client1.id);
             done();
         });
-        console.log("test post get all");
+        console.log("test chat send message");
 
         client1.socket.emit("chat:send_message", {
             to: client2.id,

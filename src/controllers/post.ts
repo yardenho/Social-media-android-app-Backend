@@ -20,35 +20,45 @@ const getAllPosts = async (req: request) => {
     }
 };
 
-const addNewPost = async (req: Request, res: Response) => {
-    console.log(req.body);
-
+const addNewPost = async (req: request) => {
     //save in DB
     const post = new Post({
-        message: req.body.message,
-        sender: req.body.userId, //extract the user id from the auth ,
+        message: req.body["message"],
+        sender: req.body["sender"],
     });
 
     try {
         const newPost = await post.save();
         console.log("save post in db");
-        res.status(200).send(newPost);
+        return new response(newPost, req.userId, null);
     } catch (err) {
         console.log("fail to save post in db");
-        res.status(400).send({ error: "fail adding new post to db" });
+        return new response(null, req.userId, new error(400, err.message));
     }
 };
 
-const getPostById = async (req: Request, res: Response) => {
+const getPostById = async (req: request) => {
     console.log(req.params.id);
 
     try {
         const posts = await Post.findById(req.params.id);
-        res.status(200).send(posts);
+        return new response(posts, req.userId, null);
     } catch (err) {
-        res.status(400).send({ error: "fail to get post from db" });
+        console.log("fail to get post from db");
+        return new response(null, req.userId, new error(400, err.message));
     }
 };
+
+// const getPostById = async (req: Request, res: Response) => {
+//     console.log(req.params._id);
+
+//     try {
+//         const posts = await Post.findById(req.params._id);
+//         res.status(200).send(posts);
+//     } catch (err) {
+//         res.status(400).send({ error: "fail to get post from db" });
+//     }
+// };
 
 const putPostById = async (req: Request, res: Response) => {
     try {

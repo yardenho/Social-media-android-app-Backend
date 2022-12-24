@@ -47,8 +47,8 @@ beforeEach(() => __awaiter(void 0, void 0, void 0, function* () {
     yield loginUser();
 }));
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
-    yield post_model_1.default.remove();
-    yield user_model_1.default.remove();
+    // await Post.remove();
+    // await User.remove();
     mongoose_1.default.connection.close(); //צריך משום שהקונקשין הזה נשאר פתוח בסוף הטסטים ולכן חייב לסגור אותו
 }));
 describe("Posts Tests ", () => {
@@ -61,9 +61,10 @@ describe("Posts Tests ", () => {
             sender: firstPostSender,
         });
         expect(response.statusCode).toEqual(200);
-        expect(response.body.message).toEqual(firstPostMessage);
-        expect(response.body.sender).toEqual(firstPostSender);
-        receivedFirstPostId = response.body._id;
+        expect(response.body.post.message).toEqual(firstPostMessage);
+        expect(response.body.post.sender).toEqual(firstPostSender);
+        console.log("new post =  " + response.body.post);
+        receivedFirstPostId = response.body.post._id;
     }));
     test("get all posts", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(server_1.default)
@@ -78,8 +79,8 @@ describe("Posts Tests ", () => {
             .get("/post/" + receivedFirstPostId)
             .set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).toEqual(200);
-        expect(response.body.message).toEqual(firstPostMessage);
-        expect(response.body.sender).toEqual(firstPostSender);
+        expect(response.body.post.message).toEqual(firstPostMessage);
+        expect(response.body.post.sender).toEqual(firstPostSender);
     }));
     test("get post by wrong id fails", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(server_1.default)
@@ -113,14 +114,14 @@ describe("Posts Tests ", () => {
             sender: firstPostSender,
         });
         expect(response.statusCode).toEqual(200);
-        expect(response.body.message).toEqual(newPostMessageUpdated);
-        expect(response.body.sender).toEqual(firstPostSender);
+        expect(response.body["message"]).toEqual(newPostMessageUpdated);
+        expect(response.body["sender"]).toEqual(firstPostSender);
         response = yield (0, supertest_1.default)(server_1.default)
             .get("/post/" + receivedFirstPostId)
             .set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).toEqual(200);
-        expect(response.body.message).toEqual(newPostMessageUpdated);
-        expect(response.body.sender).toEqual(firstPostSender);
+        expect(response.body["message"]).toEqual(newPostMessageUpdated);
+        expect(response.body["sender"]).toEqual(firstPostSender);
         response = yield (0, supertest_1.default)(server_1.default)
             .put("/post/12345")
             .set("Authorization", "JWT " + accessToken)
@@ -136,8 +137,8 @@ describe("Posts Tests ", () => {
             message: newPostMessageUpdated,
         });
         expect(response.statusCode).toEqual(200);
-        expect(response.body.message).toEqual(newPostMessageUpdated);
-        expect(response.body.sender).toEqual(firstPostSender);
+        expect(response.body["message"]).toEqual(newPostMessageUpdated);
+        expect(response.body["sender"]).toEqual(firstPostSender);
     }));
 });
 //# sourceMappingURL=post.test.js.map

@@ -40,8 +40,8 @@ beforeEach(async () => {
 });
 
 afterAll(async () => {
-    await Post.remove();
-    await User.remove();
+    // await Post.remove();
+    // await User.remove();
     mongoose.connection.close(); //צריך משום שהקונקשין הזה נשאר פתוח בסוף הטסטים ולכן חייב לסגור אותו
 });
 
@@ -55,9 +55,10 @@ describe("Posts Tests ", () => {
                 sender: firstPostSender,
             });
         expect(response.statusCode).toEqual(200);
-        expect(response.body.message).toEqual(firstPostMessage);
-        expect(response.body.sender).toEqual(firstPostSender);
-        receivedFirstPostId = response.body._id;
+        expect(response.body.post.message).toEqual(firstPostMessage);
+        expect(response.body.post.sender).toEqual(firstPostSender);
+        console.log("new post =  " + response.body.post);
+        receivedFirstPostId = response.body.post._id;
     });
 
     test("get all posts", async () => {
@@ -74,8 +75,8 @@ describe("Posts Tests ", () => {
             .get("/post/" + receivedFirstPostId)
             .set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).toEqual(200);
-        expect(response.body.message).toEqual(firstPostMessage);
-        expect(response.body.sender).toEqual(firstPostSender);
+        expect(response.body.post.message).toEqual(firstPostMessage);
+        expect(response.body.post.sender).toEqual(firstPostSender);
     });
 
     test("get post by wrong id fails", async () => {
@@ -113,15 +114,15 @@ describe("Posts Tests ", () => {
                 sender: firstPostSender,
             });
         expect(response.statusCode).toEqual(200);
-        expect(response.body.message).toEqual(newPostMessageUpdated);
-        expect(response.body.sender).toEqual(firstPostSender);
+        expect(response.body["message"]).toEqual(newPostMessageUpdated);
+        expect(response.body["sender"]).toEqual(firstPostSender);
 
         response = await request(app)
             .get("/post/" + receivedFirstPostId)
             .set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).toEqual(200);
-        expect(response.body.message).toEqual(newPostMessageUpdated);
-        expect(response.body.sender).toEqual(firstPostSender);
+        expect(response.body["message"]).toEqual(newPostMessageUpdated);
+        expect(response.body["sender"]).toEqual(firstPostSender);
 
         response = await request(app)
             .put("/post/12345")
@@ -139,7 +140,7 @@ describe("Posts Tests ", () => {
                 message: newPostMessageUpdated,
             });
         expect(response.statusCode).toEqual(200);
-        expect(response.body.message).toEqual(newPostMessageUpdated);
-        expect(response.body.sender).toEqual(firstPostSender);
+        expect(response.body["message"]).toEqual(newPostMessageUpdated);
+        expect(response.body["sender"]).toEqual(firstPostSender);
     });
 });

@@ -14,7 +14,7 @@ export = (
         );
         try {
             const response = await postController.getAllPosts(
-                new request(body, socket.data.user, null)
+                new request(body, socket.data.user, null, null)
             );
             console.log("trying to send post:get_all.response");
             socket.emit("post:get.response", response);
@@ -23,16 +23,37 @@ export = (
         }
     };
 
-    const getPostById = (payload) => {
-        socket.emit("echo:echo", payload);
+    const addNewPost = async (body) => {
+        console.log("new post handler with socketId: %s", socket.data.user);
+        try {
+            const response = await postController.addNewPost(
+                new request(body, socket.data.user, null, null)
+            );
+            console.log("trying to send post:post.response");
+            socket.emit("post:post.response", response);
+        } catch (err) {
+            socket.emit("post:post.response", { status: "fail" });
+        }
     };
 
-    const addNewPost = (payload) => {
-        socket.emit("echo:echo", payload);
+    const getPostById = async (body) => {
+        console.log(
+            "get post by id handler with socketId: %s",
+            socket.data.user
+        );
+        try {
+            const response = await postController.getPostById(
+                new request(body, socket.data.user, null, body)
+            );
+            console.log("trying to send post:get:id.response");
+            socket.emit("post:get:id.response", response);
+        } catch (err) {
+            socket.emit("post:get:id.response", { status: "fail" });
+        }
     };
 
     console.log("register echo handlers");
     socket.on("post:get", getAllPosts);
-    socket.on("post:get_by_id", getPostById);
-    socket.on("post:add_new", addNewPost);
+    socket.on("post:get:id", getPostById);
+    socket.on("post:post", addNewPost);
 };

@@ -96,7 +96,19 @@ router.get("/", auth.authenticateMiddleware, async (req, res) => {
  *
  */
 
-router.get("/:id", auth.authenticateMiddleware, post.getPostById);
+// router.get("/:id", auth.authenticateMiddleware, post.getPostById);
+
+router.get("/:id", auth.authenticateMiddleware, async (req, res) => {
+    try {
+        const response = await post.getPostById(request.fromRestRequest(req));
+        response.sendRestResponse(res);
+    } catch (err) {
+        res.status(400).send({
+            status: "fail",
+            message: err.message,
+        });
+    }
+});
 
 /**
  * @swagger
@@ -122,7 +134,18 @@ router.get("/:id", auth.authenticateMiddleware, post.getPostById);
  *
  */
 
-router.post("/", auth.authenticateMiddleware, post.addNewPost);
+// router.post("/", auth.authenticateMiddleware, post.addNewPost);
+router.post("/", auth.authenticateMiddleware, async (req, res) => {
+    try {
+        const response = await post.addNewPost(request.fromRestRequest(req));
+        response.sendRestResponse(res);
+    } catch (err) {
+        res.status(400).send({
+            status: "fail",
+            message: err.message,
+        });
+    }
+});
 
 /**
  * @swagger
