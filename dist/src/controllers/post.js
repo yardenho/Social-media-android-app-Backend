@@ -58,17 +58,17 @@ const getPostById = (req) => __awaiter(void 0, void 0, void 0, function* () {
         return new response_1.default(null, req.userId, new error_1.default(400, err.message));
     }
 });
-const putPostById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const putPostById = (req) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const post = yield post_model_1.default.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
         });
         console.log("save post in db");
-        res.status(200).send(post);
+        return new response_1.default(post, req.userId, null);
     }
     catch (err) {
         console.log("fail to update post in db");
-        res.status(400).send({ error: "fail adding new post to db" });
+        return new response_1.default(null, req.userId, new error_1.default(400, err.message));
     }
 });
 module.exports = {

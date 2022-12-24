@@ -68,9 +68,26 @@ export = (
         }
     };
 
+    const updatePostById = async (body) => {
+        console.log(
+            "update post by id handler with socketId: %s",
+            socket.data.user
+        );
+        try {
+            const response = await postController.putPostById(
+                new request(body, socket.data.user, null, body)
+            );
+            console.log("trying to send post:put.response");
+            socket.emit("post:put.response", response);
+        } catch (err) {
+            socket.emit("post:put.response", { status: "fail" });
+        }
+    };
+
     console.log("register echo handlers");
     socket.on("post:get", getAllPosts);
     socket.on("post:post", addNewPost);
     socket.on("post:get:id", getPostById);
     socket.on("post:get:sender", getPostBySender);
+    socket.on("post:put", updatePostById);
 };

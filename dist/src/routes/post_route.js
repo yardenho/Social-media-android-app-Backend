@@ -183,6 +183,18 @@ router.post("/", auth_js_1.default.authenticateMiddleware, (req, res) => __await
  *               $ref: '#/components/schemas/Post'
  *
  */
-router.put("/:id", auth_js_1.default.authenticateMiddleware, post_1.default.putPostById);
+// router.put("/:id", auth.authenticateMiddleware, post.putPostById);
+router.put("/:id", auth_js_1.default.authenticateMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const response = yield post_1.default.putPostById(request_1.default.fromRestRequest(req));
+        response.sendRestResponse(res);
+    }
+    catch (err) {
+        res.status(400).send({
+            status: "fail",
+            message: err.message,
+        });
+    }
+}));
 module.exports = router;
 //# sourceMappingURL=post_route.js.map

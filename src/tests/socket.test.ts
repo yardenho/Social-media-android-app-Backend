@@ -8,6 +8,8 @@ import User from "../models/user_model";
 
 const firstPostMessage = "this is the first new test post message";
 let newPostId = "";
+const newPostMessageUpdated =
+    "this is the updated first new test post message !!!";
 
 const userEmail = "user1@gmail.com";
 const userPassword = "12345";
@@ -136,6 +138,24 @@ describe("my awesome project", () => {
             sender: client1.id,
         });
     });
+
+    test("Post put by id test", (done) => {
+        client1.socket.once("post:put.response", (arg) => {
+            console.log("on any" + arg);
+            expect(arg.body.message).toBe(newPostMessageUpdated);
+            expect(arg.body.sender).toBe(client1.id);
+            expect(arg.status).toBe("ok");
+            done();
+        });
+        console.log("test post put by id");
+        client1.socket.emit("post:put", {
+            id: newPostId,
+            message: newPostMessageUpdated,
+            sender: client1.id,
+        });
+    });
+
+    //add tests
 
     test("test chat messages", (done) => {
         const message = "hi... test 123";

@@ -178,6 +178,18 @@ router.post("/", auth.authenticateMiddleware, async (req, res) => {
  *
  */
 
-router.put("/:id", auth.authenticateMiddleware, post.putPostById);
+// router.put("/:id", auth.authenticateMiddleware, post.putPostById);
+
+router.put("/:id", auth.authenticateMiddleware, async (req, res) => {
+    try {
+        const response = await post.putPostById(request.fromRestRequest(req));
+        response.sendRestResponse(res);
+    } catch (err) {
+        res.status(400).send({
+            status: "fail",
+            message: err.message,
+        });
+    }
+});
 
 export = router;
