@@ -81,13 +81,13 @@ describe("my awesome project", () => {
     });
 
     test("Post get all test", (done) => {
-        client1.socket.once("post:get_all.response", (arg) => {
+        client1.socket.once("post:get.response", (arg) => {
             console.log("on any" + arg);
             expect(arg.status).toBe("ok");
             done();
         });
         console.log("test post get all");
-        client1.socket.emit("post:get_all", "stam");
+        client1.socket.emit("post:get", "stam");
     });
 
     test("test chat messages", (done) => {
