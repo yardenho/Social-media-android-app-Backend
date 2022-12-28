@@ -87,16 +87,6 @@ describe("my awesome project", () => {
         client1.socket.emit("echo:echo", { msg: "hello" });
     });
 
-    test("Post get all test", (done) => {
-        client1.socket.once("post:get.response", (arg) => {
-            console.log("on any" + arg);
-            expect(arg.status).toBe("ok");
-            done();
-        });
-        console.log("test post get all");
-        client1.socket.emit("post:get", "stam");
-    });
-
     test("Post add new test", (done) => {
         client1.socket.once("post:post.response", (arg) => {
             console.log("on any" + arg);
@@ -113,6 +103,16 @@ describe("my awesome project", () => {
         });
     });
 
+    test("Post get all test", (done) => {
+        client1.socket.once("post:get.response", (arg) => {
+            console.log("on any" + arg);
+            expect(arg.status).toBe("ok");
+            done();
+        });
+        console.log("test post get all");
+        client1.socket.emit("post:get", "stam");
+    });
+
     test("Post get by id test", (done) => {
         client1.socket.once("post:get:id.response", (arg) => {
             console.log("on any" + arg);
@@ -124,6 +124,19 @@ describe("my awesome project", () => {
         console.log("test post get by id");
         client1.socket.emit("post:get:id", {
             id: newPostId,
+        });
+    });
+
+    test("Post get by wrong id test", (done) => {
+        client1.socket.once("post:get:id.response", (arg) => {
+            console.log("on any" + arg);
+            expect(arg.err.code).toBe(400);
+            expect(arg.status).toBe("fail");
+            done();
+        });
+        console.log("test post get by wrong id");
+        client1.socket.emit("post:get:id", {
+            id: 12345,
         });
     });
 
@@ -141,7 +154,20 @@ describe("my awesome project", () => {
         });
     });
 
-    test("Post put by id test", (done) => {
+    test("get post by wrong sender", (done) => {
+        client1.socket.once("post:get:sender.response", (arg) => {
+            console.log("on any" + arg);
+            expect(arg.status).toBe("ok");
+            expect(arg.body.length).toEqual(0);
+            done();
+        });
+        console.log("test post get by wrong sender");
+        client1.socket.emit("post:get:sender", {
+            sender: 12345,
+        });
+    });
+
+    test("Post put by id test - update message and sender", (done) => {
         client1.socket.once("post:put.response", (arg) => {
             console.log("on any" + arg);
             expect(arg.body.message).toBe(newPostMessageUpdated);
@@ -151,9 +177,52 @@ describe("my awesome project", () => {
         });
         console.log("test post put by id");
         client1.socket.emit("post:put", {
-            id: newPostId,
+            id: newPostId, //check if teher is a way to send the id as parameter
             message: newPostMessageUpdated,
             sender: client1.id,
+        });
+    });
+
+    test("Post put by id test check", (done) => {
+        client1.socket.once("post:get:id.response", (arg) => {
+            console.log("on any" + arg);
+            expect(arg.body.message).toBe(newPostMessageUpdated);
+            expect(arg.body.sender).toBe(client1.id);
+            expect(arg.status).toBe("ok");
+            done();
+        });
+        console.log("test post get by id");
+        client1.socket.emit("post:get:id", {
+            id: newPostId,
+        });
+    });
+
+    test("Post put by wrong id test", (done) => {
+        client1.socket.once("post:put.response", (arg) => {
+            console.log("on any" + arg);
+            expect(arg.status).toBe("fail");
+            done();
+        });
+        console.log("test post put by id");
+        client1.socket.emit("post:put", {
+            id: 123456, //check if teher is a way to send the id as parameter
+            message: newPostMessageUpdated,
+            sender: client1.id,
+        });
+    });
+
+    test("Post put by id test - update message", (done) => {
+        client1.socket.once("post:put.response", (arg) => {
+            console.log("on any" + arg);
+            expect(arg.body.message).toBe(newPostMessageUpdated);
+            expect(arg.body.sender).toBe(client1.id);
+            expect(arg.status).toBe("ok");
+            done();
+        });
+        console.log("test post put by id");
+        client1.socket.emit("post:put", {
+            id: newPostId, //check if teher is a way to send the id as parameter
+            message: newPostMessageUpdated,
         });
     });
 
