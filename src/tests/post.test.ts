@@ -6,6 +6,7 @@ import User from "../models/user_model";
 
 //variables for testing
 const firstPostMessage = "this is the first new test post message";
+const secondPostMessage = "this is the second new test post message";
 let firstPostSender = "";
 
 let receivedFirstPostId = "";
@@ -61,6 +62,19 @@ describe("Posts Tests ", () => {
         receivedFirstPostId = response.body.post._id;
     });
 
+    test("add another new post", async () => {
+        const response = await request(app)
+            .post("/post")
+            .set("Authorization", "JWT " + accessToken)
+            .send({
+                message: secondPostMessage,
+                sender: firstPostSender,
+            });
+        expect(response.statusCode).toEqual(200);
+        expect(response.body.post.message).toEqual(secondPostMessage);
+        expect(response.body.post.sender).toEqual(firstPostSender);
+    });
+
     test("get all posts", async () => {
         const response = await request(app)
             .get("/post")
@@ -68,6 +82,7 @@ describe("Posts Tests ", () => {
         expect(response.statusCode).toEqual(200);
         expect(response.body.post[0].message).toEqual(firstPostMessage);
         expect(response.body.post[0].sender).toEqual(firstPostSender);
+        expect(response.body.post.length).toEqual(2);
     });
 
     test("get post by Id", async () => {
@@ -94,6 +109,7 @@ describe("Posts Tests ", () => {
         console.log(response.body);
         expect(response.body.post[0].message).toEqual(firstPostMessage);
         expect(response.body.post[0].sender).toEqual(firstPostSender);
+        expect(response.body.post.length).toEqual(2);
     });
 
     test("get post by wrong sender", async () => {

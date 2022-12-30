@@ -7,6 +7,7 @@ import Post from "../models/post_model";
 import User from "../models/user_model";
 
 const firstPostMessage = "this is the first new test post message";
+const secondPostMessage = "this is the second new test post message";
 let newPostId = "";
 const newPostMessageUpdated =
     "this is the updated first new test post message !!!";
@@ -103,10 +104,26 @@ describe("my awesome project", () => {
         });
     });
 
+    test("Post add new test by other client", (done) => {
+        client2.socket.once("post:post.response", (arg) => {
+            console.log("on any" + arg);
+            expect(arg.body.message).toBe(secondPostMessage);
+            expect(arg.body.sender).toBe(client2.id);
+            expect(arg.status).toBe("ok");
+            done();
+        });
+        console.log("test post add new post");
+        client2.socket.emit("post:post", {
+            message: secondPostMessage,
+            sender: client2.id,
+        });
+    });
+
     test("Post get all test", (done) => {
         client1.socket.once("post:get.response", (arg) => {
             console.log("on any" + arg);
             expect(arg.status).toBe("ok");
+            expect(arg.body.length).toEqual(2);
             done();
         });
         console.log("test post get all");

@@ -19,6 +19,7 @@ const post_model_1 = __importDefault(require("../models/post_model"));
 const user_model_1 = __importDefault(require("../models/user_model"));
 //variables for testing
 const firstPostMessage = "this is the first new test post message";
+const secondPostMessage = "this is the second new test post message";
 let firstPostSender = "";
 let receivedFirstPostId = "";
 const newPostMessageUpdated = "this is the updated first new test post message !!!";
@@ -66,6 +67,18 @@ describe("Posts Tests ", () => {
         console.log("new post =  " + response.body.post);
         receivedFirstPostId = response.body.post._id;
     }));
+    test("add another new post", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(server_1.default)
+            .post("/post")
+            .set("Authorization", "JWT " + accessToken)
+            .send({
+            message: secondPostMessage,
+            sender: firstPostSender,
+        });
+        expect(response.statusCode).toEqual(200);
+        expect(response.body.post.message).toEqual(secondPostMessage);
+        expect(response.body.post.sender).toEqual(firstPostSender);
+    }));
     test("get all posts", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(server_1.default)
             .get("/post")
@@ -73,6 +86,7 @@ describe("Posts Tests ", () => {
         expect(response.statusCode).toEqual(200);
         expect(response.body.post[0].message).toEqual(firstPostMessage);
         expect(response.body.post[0].sender).toEqual(firstPostSender);
+        expect(response.body.post.length).toEqual(2);
     }));
     test("get post by Id", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(server_1.default)
@@ -96,6 +110,7 @@ describe("Posts Tests ", () => {
         console.log(response.body);
         expect(response.body.post[0].message).toEqual(firstPostMessage);
         expect(response.body.post[0].sender).toEqual(firstPostSender);
+        expect(response.body.post.length).toEqual(2);
     }));
     test("get post by wrong sender", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(server_1.default)
