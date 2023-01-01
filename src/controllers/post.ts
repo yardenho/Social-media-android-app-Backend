@@ -1,5 +1,4 @@
 import Post from "../models/post_model";
-import { Request, Response } from "express";
 import request from "../request";
 import response from "../response";
 import error from "../error";

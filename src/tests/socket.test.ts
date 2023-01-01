@@ -18,6 +18,8 @@ const userPassword = "12345";
 const userEmail2 = "user2@gmail.com";
 const userPassword2 = "12345";
 
+const message = "hi... test 123";
+
 type Client = {
     socket: Socket<DefaultEventsMap, DefaultEventsMap>;
     accessToken: string;
@@ -243,14 +245,15 @@ describe("my awesome project", () => {
         });
     });
 
-    //add tests
+    //Chat tests
 
-    test("test chat messages", (done) => {
-        const message = "hi... test 123";
+    test("test chat send message", (done) => {
         client2.socket.once("chat:message", (arg) => {
             expect(arg.to).toBe(client2.id);
             expect(arg.message).toBe(message);
             expect(arg.from).toBe(client1.id);
+            expect(arg.res.status).toBe("ok");
+
             done();
         });
         console.log("test chat send message");
@@ -258,6 +261,23 @@ describe("my awesome project", () => {
         client1.socket.emit("chat:send_message", {
             to: client2.id,
             message: message,
+        });
+    });
+
+    test("test chat get all messages", (done) => {
+        client1.socket.once("chat:get_all.response", (arg) => {
+            expect(arg.body.length).toBe(1);
+            expect(arg.body[0].reciver).toBe(client2.id);
+            expect(arg.body[0].body).toBe(message);
+            expect(arg.body[0].sender).toBe(client1.id);
+            expect(arg.status).toBe("ok");
+
+            done();
+        });
+        console.log("test chat get all messages");
+
+        client1.socket.emit("chat:get_all", {
+            sender: client1.id,
         });
     });
 });
