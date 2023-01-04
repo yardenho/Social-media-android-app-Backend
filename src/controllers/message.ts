@@ -7,11 +7,13 @@ const getAllMessages = async (req: request) => {
     // implement the get all messages with specific sender
     try {
         let messages = {};
+
         if (req.query != null && req.query.sender != null) {
             messages = await Message.find({ sender: req.query.sender });
-        } else {
-            messages = await Message.find();
+        } else if (req.query != null && req.query.reciver != null) {
+            messages = await Message.find({ reciver: req.query.reciver });
         }
+
         return new response(messages, req.userId, null);
     } catch (err) {
         console.log("err");

@@ -5,6 +5,7 @@ import { DefaultEventsMap } from "@socket.io/component-emitter";
 import request from "supertest";
 import Post from "../models/post_model";
 import User from "../models/user_model";
+import Message from "../models/message_model";
 
 const firstPostMessage = "this is the first new test post message";
 const secondPostMessage = "this is the second new test post message";
@@ -68,6 +69,7 @@ describe("my awesome project", () => {
     beforeAll(async () => {
         await Post.remove();
         await User.remove();
+        await Message.remove();
         client1 = await connectUser(userEmail, userPassword);
         client2 = await connectUser(userEmail2, userPassword2);
     });
@@ -253,6 +255,7 @@ describe("my awesome project", () => {
             expect(arg.message).toBe(message);
             expect(arg.from).toBe(client1.id);
             expect(arg.res.status).toBe("ok");
+            console.log("new message id === " + arg.res.body._id); // message id
 
             done();
         });
@@ -264,7 +267,20 @@ describe("my awesome project", () => {
         });
     });
 
-    test("test chat get all messages", (done) => {
+    test("test chat send message with no message", (done) => {
+        client2.socket.once("chat:message", (arg) => {
+            expect(arg.res.status).toBe("fail");
+
+            done();
+        });
+        console.log("test chat send message");
+
+        client1.socket.emit("chat:send_message", {
+            to: client2.id,
+        });
+    });
+
+    test("test chat get all messages that send by user", (done) => {
         client1.socket.once("chat:get_all.response", (arg) => {
             expect(arg.body.length).toBe(1);
             expect(arg.body[0].reciver).toBe(client2.id);
@@ -278,6 +294,20 @@ describe("my awesome project", () => {
 
         client1.socket.emit("chat:get_all", {
             sender: client1.id,
+        });
+    });
+
+    test("test chat get all messages that send to user", (done) => {
+        client1.socket.once("chat:get_all.response", (arg) => {
+            expect(arg.body.length).toBe(0);
+            expect(arg.status).toBe("ok");
+
+            done();
+        });
+        console.log("test chat get all messages");
+
+        client1.socket.emit("chat:get_all", {
+            reciver: client1.id,
         });
     });
 });
