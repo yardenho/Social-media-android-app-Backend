@@ -12,8 +12,9 @@ const getAllMessages = async (req: request) => {
             messages = await Message.find({ sender: req.query.sender });
         } else if (req.query != null && req.query.reciver != null) {
             messages = await Message.find({ reciver: req.query.reciver });
+        } else {
+            messages = await Message.find();
         }
-
         return new response(messages, req.userId, null);
     } catch (err) {
         console.log("err");

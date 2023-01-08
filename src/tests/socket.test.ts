@@ -310,4 +310,30 @@ describe("my awesome project", () => {
             reciver: client1.id,
         });
     });
+
+    test("test chat get all messages that send by user that did not send any message", (done) => {
+        client1.socket.once("chat:get_all.response", (arg) => {
+            expect(arg.body.length).toBe(0);
+            expect(arg.status).toBe("ok");
+
+            done();
+        });
+        console.log("test chat get all messages");
+
+        client1.socket.emit("chat:get_all", {
+            sender: client1.id + 2,
+        });
+    });
+
+    test("test chat get all messages that send by user that did not send any message", (done) => {
+        client1.socket.once("chat:get_all.response", (arg) => {
+            expect(arg.body.length).toBe(1);
+            expect(arg.status).toBe("ok");
+
+            done();
+        });
+        console.log("test chat get all messages");
+
+        client1.socket.emit("chat:get_all");
+    });
 });
