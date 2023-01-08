@@ -325,7 +325,7 @@ describe("my awesome project", () => {
         });
     });
 
-    test("test chat get all messages that send by user that did not send any message", (done) => {
+    test("test chat get all messages ", (done) => {
         client1.socket.once("chat:get_all.response", (arg) => {
             expect(arg.body.length).toBe(1);
             expect(arg.status).toBe("ok");
