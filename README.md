@@ -1,3 +1,3 @@
 # InternetSystemsDev
-Web development  - Backend in Node.js and frontend in React .
+Web development  - Backend in Node.js .
 Using Mongoose for the database. 
