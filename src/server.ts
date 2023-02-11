@@ -32,7 +32,7 @@ app.use("/uploads", express.static("uploads"));
 import authRouter from "./routes/auth_route.js";
 app.use("/auth", authRouter);
 
-import postRouter from "./routes/post_route";
+import postRouter from "./routes/post_route.js";
 app.use("/post", postRouter);
 
 import studentRouter from "./routes/student_route.js";

@@ -29,8 +29,8 @@ app.use("/public", express_1.default.static("public")); //מאפשר גישה ל
 app.use("/uploads", express_1.default.static("uploads"));
 const auth_route_js_1 = __importDefault(require("./routes/auth_route.js"));
 app.use("/auth", auth_route_js_1.default);
-const post_route_1 = __importDefault(require("./routes/post_route"));
-app.use("/post", post_route_1.default);
+const post_route_js_1 = __importDefault(require("./routes/post_route.js"));
+app.use("/post", post_route_js_1.default);
 const student_route_js_1 = __importDefault(require("./routes/student_route.js"));
 app.use("/student", student_route_js_1.default);
 const file_route_js_1 = __importDefault(require("./routes/file_route.js"));
