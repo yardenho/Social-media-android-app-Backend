@@ -36,8 +36,8 @@ const addNewPost = (req) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("in new post");
     console.log(req.body);
     const post = new post_model_1.default({
-        message: req.body["description"],
-        sender: req.body["username"],
+        message: req.body["message"],
+        sender: req.body["userId"],
         image: req.body["image"],
     });
     try {
