@@ -147,7 +147,6 @@ const authenticateMiddleware = (req, res, next) => __awaiter(void 0, void 0, voi
         return next();
     }
     catch (err) {
-        console.log("not validate " + err);
         return sendError(401, res, "fail validation token");
     }
 });
