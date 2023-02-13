@@ -21,9 +21,13 @@ const getAllPosts = async (req: request) => {
 
 const addNewPost = async (req: request) => {
     //save in DB
+    console.log("in new post");
+    console.log(req.body);
+
     const post = new Post({
         message: req.body["message"],
-        sender: req.body["sender"],
+        sender: req.body["userId"],
+        image: req.body["image"],
     });
 
     try {
@@ -32,6 +36,7 @@ const addNewPost = async (req: request) => {
         return new response(newPost, req.userId, null);
     } catch (err) {
         console.log("fail to save post in db");
+        console.log(err);
         return new response(null, req.userId, new error(400, err.message));
     }
 };

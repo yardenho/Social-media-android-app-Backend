@@ -54,10 +54,12 @@ describe("Posts Tests ", () => {
             .send({
                 message: firstPostMessage,
                 sender: firstPostSender,
+                image: "url",
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.post.message).toEqual(firstPostMessage);
         expect(response.body.post.sender).toEqual(firstPostSender);
+        expect(response.body.post.image).toEqual("url");
         console.log("new post =  " + response.body.post);
         receivedFirstPostId = response.body.post._id;
     });
@@ -69,10 +71,12 @@ describe("Posts Tests ", () => {
             .send({
                 message: secondPostMessage,
                 sender: firstPostSender,
+                image: "url",
             });
         expect(response.statusCode).toEqual(200);
         expect(response.body.post.message).toEqual(secondPostMessage);
         expect(response.body.post.sender).toEqual(firstPostSender);
+        expect(response.body.post.image).toEqual("url");
     });
 
     test("get all posts", async () => {

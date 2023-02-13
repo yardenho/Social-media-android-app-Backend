@@ -33,9 +33,12 @@ const getAllPosts = (req) => __awaiter(void 0, void 0, void 0, function* () {
 });
 const addNewPost = (req) => __awaiter(void 0, void 0, void 0, function* () {
     //save in DB
+    console.log("in new post");
+    console.log(req.body);
     const post = new post_model_1.default({
-        message: req.body["message"],
-        sender: req.body["sender"],
+        message: req.body["description"],
+        sender: req.body["username"],
+        image: req.body["image"],
     });
     try {
         const newPost = yield post.save();
@@ -44,6 +47,7 @@ const addNewPost = (req) => __awaiter(void 0, void 0, void 0, function* () {
     }
     catch (err) {
         console.log("fail to save post in db");
+        console.log(err);
         return new response_1.default(null, req.userId, new error_1.default(400, err.message));
     }
 });
