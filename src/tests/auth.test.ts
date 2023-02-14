@@ -52,9 +52,9 @@ describe("Auth Tests ", () => {
             password: userPassword,
         });
         expect(response.statusCode).toEqual(200);
-        accessToken = response.body.accessToken;
+        accessToken = response.body.tokens.accessToken;
         expect(accessToken).not.toBeNull();
-        refreshToken = response.body.refreshToken;
+        refreshToken = response.body.tokens.refreshToken;
         expect(refreshToken).not.toBeNull();
     });
 

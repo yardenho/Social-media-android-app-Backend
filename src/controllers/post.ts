@@ -23,10 +23,11 @@ const addNewPost = async (req: request) => {
     //save in DB
     console.log("in new post");
     console.log(req.body);
+    console.log(req);
 
     const post = new Post({
         message: req.body["message"],
-        sender: req.body["userId"],
+        sender: req.userId,
         image: req.body["image"],
     });
 

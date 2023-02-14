@@ -41,7 +41,7 @@ function loginUser() {
             email: userEmail,
             password: userPassword,
         });
-        accessToken = response.body.accessToken;
+        accessToken = response.body.tokens.accessToken;
     });
 }
 beforeEach(() => __awaiter(void 0, void 0, void 0, function* () {

@@ -35,9 +35,10 @@ const addNewPost = (req) => __awaiter(void 0, void 0, void 0, function* () {
     //save in DB
     console.log("in new post");
     console.log(req.body);
+    console.log(req);
     const post = new post_model_1.default({
         message: req.body["message"],
-        sender: req.body["userId"],
+        sender: req.userId,
         image: req.body["image"],
     });
     try {

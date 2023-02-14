@@ -33,7 +33,7 @@ async function loginUser() {
         email: userEmail,
         password: userPassword,
     });
-    accessToken = response.body.accessToken;
+    accessToken = response.body.tokens.accessToken;
 }
 
 beforeEach(async () => {

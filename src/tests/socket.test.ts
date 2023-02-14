@@ -51,7 +51,7 @@ const connectUser = async (userEmail: string, userPassword: string) => {
         email: userEmail,
         password: userPassword,
     });
-    const token = response.body.accessToken;
+    const token = response.body.tokens.accessToken;
 
     //פתיחת סוקט ללקוח ה-1
     const socket = Client("http://localhost:" + process.env.PORT, {
@@ -94,7 +94,7 @@ describe("my awesome project", () => {
 
     test("Post add new test", (done) => {
         client1.socket.once("post:post.response", (arg) => {
-            console.log("on any" + arg);
+            console.log("on any" + arg.body);
             expect(arg.body.message).toBe(firstPostMessage);
             expect(arg.body.sender).toBe(client1.id);
             expect(arg.status).toBe("ok");
@@ -105,6 +105,7 @@ describe("my awesome project", () => {
         client1.socket.emit("post:post", {
             message: firstPostMessage,
             sender: client1.id,
+            image: "url",
         });
     });
 
@@ -120,6 +121,7 @@ describe("my awesome project", () => {
         client2.socket.emit("post:post", {
             message: secondPostMessage,
             sender: client2.id,
+            image: "url",
         });
     });
 
@@ -201,6 +203,7 @@ describe("my awesome project", () => {
             id: newPostId, //check if teher is a way to send the id as parameter
             message: newPostMessageUpdated,
             sender: client1.id,
+            image: "url",
         });
     });
 
