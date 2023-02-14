@@ -82,7 +82,7 @@ const login = async (req: Request, res: Response) => {
         else user.refresh_tokens.push(tokens.refreshToken);
         await user.save();
 
-        return res.status(200).send(tokens);
+        return res.status(200).send({ tokens: tokens, userId: user._id });
     } catch (err) {
         console.log("error:" + err);
         return sendError(400, res, "fail checking user");

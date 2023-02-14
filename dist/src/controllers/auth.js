@@ -75,7 +75,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         else
             user.refresh_tokens.push(tokens.refreshToken);
         yield user.save();
-        return res.status(200).send(tokens);
+        return res.status(200).send({ tokens: tokens, userId: user._id });
     }
     catch (err) {
         console.log("error:" + err);
