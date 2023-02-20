@@ -31,8 +31,10 @@ const auth_route_js_1 = __importDefault(require("./routes/auth_route.js"));
 app.use("/auth", auth_route_js_1.default);
 const post_route_js_1 = __importDefault(require("./routes/post_route.js"));
 app.use("/post", post_route_js_1.default);
-const student_route_js_1 = __importDefault(require("./routes/student_route.js"));
-app.use("/student", student_route_js_1.default);
+const user_route_js_1 = __importDefault(require("./routes/user_route.js"));
+app.use("/user", user_route_js_1.default);
+// import studentRouter from "./routes/student_route.js"; // TODO
+// app.use("/student", studentRouter);
 const file_route_js_1 = __importDefault(require("./routes/file_route.js"));
 app.use("/file", file_route_js_1.default);
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));

@@ -21,8 +21,13 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //check if user is valid
     const email = req.body.email;
     const password = req.body.password;
-    if (email == null || password == null) {
-        return sendError(400, res, "please provide valid email and password");
+    const userImage = req.body.image;
+    const userFullName = req.body.fullName;
+    if (email == null ||
+        password == null ||
+        userImage == null ||
+        userFullName == null) {
+        return sendError(400, res, "please provide valid details");
     }
     //check if it is not alreade registred
     try {
@@ -36,6 +41,8 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const newUser = new user_model_1.default({
             email: email,
             password: encryptedPwd,
+            image: userImage,
+            fullName: userFullName,
         });
         yield newUser.save();
         return res.status(200).send({
@@ -137,9 +144,12 @@ const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 const authenticateMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("in middleware");
     const token = getTokenFromRequest(req);
-    if (token == null)
+    if (token == null) {
+        console.log("in middleware token == null");
         return sendError(400, res, "authentication missing");
+    }
     try {
         const user = (jsonwebtoken_1.default.verify(token, process.env.ACCESS_TOKEN_SECRET));
         req.body.userId = user.id;
@@ -147,6 +157,7 @@ const authenticateMiddleware = (req, res, next) => __awaiter(void 0, void 0, voi
         return next();
     }
     catch (err) {
+        console.log("in middleware error");
         return sendError(401, res, "fail validation token");
     }
 });

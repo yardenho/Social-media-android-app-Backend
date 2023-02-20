@@ -25,6 +25,8 @@ let receivedFirstPostId = "";
 const newPostMessageUpdated = "this is the updated first new test post message !!!";
 const userEmail = "user1@gmail.com";
 const userPassword = "12345";
+const userImage = "url";
+const userFullName = "Israel Israeli";
 let accessToken = "";
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield post_model_1.default.remove();
@@ -32,6 +34,8 @@ beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     const res = yield (0, supertest_1.default)(server_1.default).post("/auth/register").send({
         email: userEmail,
         password: userPassword,
+        image: userImage,
+        fullName: userFullName,
     });
     firstPostSender = res.body._id;
 }));

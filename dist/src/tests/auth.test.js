@@ -19,6 +19,8 @@ const post_model_1 = __importDefault(require("../models/post_model"));
 const user_model_1 = __importDefault(require("../models/user_model"));
 const userEmail = "user1@gmail.com";
 const userPassword = "12345";
+const userImage = "url";
+const userFullName = "Israel Israeli";
 let accessToken = "";
 let refreshToken = "";
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
@@ -39,8 +41,19 @@ describe("Auth Tests ", () => {
         const response = yield (0, supertest_1.default)(server_1.default).post("/auth/register").send({
             email: userEmail,
             password: userPassword,
+            image: userImage,
+            fullName: userFullName,
         });
         expect(response.statusCode).toEqual(200);
+    }));
+    test("register test with the same email", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(server_1.default).post("/auth/register").send({
+            email: userEmail,
+            password: userPassword,
+            image: userImage,
+            fullName: userFullName,
+        });
+        expect(response.statusCode).toEqual(400);
     }));
     test("login test wrong password", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(server_1.default)

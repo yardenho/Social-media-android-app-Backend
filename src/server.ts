@@ -35,8 +35,11 @@ app.use("/auth", authRouter);
 import postRouter from "./routes/post_route.js";
 app.use("/post", postRouter);
 
-import studentRouter from "./routes/student_route.js";
-app.use("/student", studentRouter);
+import userRouter from "./routes/user_route.js";
+app.use("/user", userRouter);
+
+// import studentRouter from "./routes/student_route.js"; // TODO
+// app.use("/student", studentRouter);
 
 import fileRouter from "./routes/file_route.js";
 app.use("/file", fileRouter);
