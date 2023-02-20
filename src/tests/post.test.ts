@@ -16,6 +16,8 @@ const newPostMessageUpdated =
 
 const userEmail = "user1@gmail.com";
 const userPassword = "12345";
+const userImage = "url";
+const userFullName = "Israel Israeli";
 let accessToken = "";
 
 beforeAll(async () => {
@@ -24,6 +26,8 @@ beforeAll(async () => {
     const res = await request(app).post("/auth/register").send({
         email: userEmail,
         password: userPassword,
+        image: userImage,
+        fullName: userFullName,
     });
     firstPostSender = res.body._id;
 });

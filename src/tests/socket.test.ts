@@ -15,6 +15,8 @@ const newPostMessageUpdated =
 
 const userEmail = "user1@gmail.com";
 const userPassword = "12345";
+const userImage = "url";
+const userFullName = "Israel Israeli";
 
 const userEmail2 = "user2@gmail.com";
 const userPassword2 = "12345";
@@ -44,6 +46,8 @@ const connectUser = async (userEmail: string, userPassword: string) => {
     const response1 = await request(server).post("/auth/register").send({
         email: userEmail,
         password: userPassword,
+        image: userImage,
+        fullName: userFullName,
     });
     const userId = response1.body._id;
 
