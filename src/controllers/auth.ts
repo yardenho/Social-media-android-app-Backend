@@ -11,9 +11,16 @@ const register = async (req: Request, res: Response) => {
     //check if user is valid
     const email = req.body.email;
     const password = req.body.password;
+    const userImage = req.body.image;
+    const userFullName = req.body.fullName;
 
-    if (email == null || password == null) {
-        return sendError(400, res, "please provide valid email and password");
+    if (
+        email == null ||
+        password == null ||
+        userImage == null ||
+        userFullName == null
+    ) {
+        return sendError(400, res, "please provide valid details");
     }
 
     //check if it is not alreade registred
@@ -33,6 +40,8 @@ const register = async (req: Request, res: Response) => {
         const newUser = new User({
             email: email,
             password: encryptedPwd,
+            image: userImage,
+            fullName: userFullName,
         });
         await newUser.save();
         return res.status(200).send({
@@ -165,9 +174,12 @@ const authenticateMiddleware = async (
     res: Response,
     next: NextFunction
 ) => {
+    console.log("in middleware");
     const token = getTokenFromRequest(req);
-    if (token == null) return sendError(400, res, "authentication missing");
-
+    if (token == null) {
+        console.log("in middleware token == null");
+        return sendError(400, res, "authentication missing");
+    }
     try {
         const user = <TokenInfo>(
             jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
@@ -176,6 +188,7 @@ const authenticateMiddleware = async (
         console.log("token user: " + user);
         return next();
     } catch (err) {
+        console.log("in middleware error");
         return sendError(401, res, "fail validation token");
     }
 };
