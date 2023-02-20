@@ -6,6 +6,9 @@ import User from "../models/user_model";
 
 const userEmail = "user1@gmail.com";
 const userPassword = "12345";
+const userImage = "url";
+const userFullName = "Israel Israeli";
+
 let accessToken = "";
 let refreshToken = "";
 
@@ -30,8 +33,20 @@ describe("Auth Tests ", () => {
         const response = await request(app).post("/auth/register").send({
             email: userEmail,
             password: userPassword,
+            image: userImage,
+            fullName: userFullName,
         });
         expect(response.statusCode).toEqual(200);
+    });
+
+    test("register test with the same email", async () => {
+        const response = await request(app).post("/auth/register").send({
+            email: userEmail,
+            password: userPassword,
+            image: userImage,
+            fullName: userFullName,
+        });
+        expect(response.statusCode).toEqual(400);
     });
 
     test("login test wrong password", async () => {
