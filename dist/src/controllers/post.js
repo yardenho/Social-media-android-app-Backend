@@ -54,6 +54,7 @@ const addNewPost = (req) => __awaiter(void 0, void 0, void 0, function* () {
 });
 const getPostById = (req) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(req.params.id);
+    console.log("in getPostById");
     try {
         const posts = yield post_model_1.default.findById(req.params.id);
         return new response_1.default(posts, req.userId, null);

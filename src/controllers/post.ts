@@ -44,6 +44,7 @@ const addNewPost = async (req: request) => {
 
 const getPostById = async (req: request) => {
     console.log(req.params.id);
+    console.log("in getPostById");
 
     try {
         const posts = await Post.findById(req.params.id);

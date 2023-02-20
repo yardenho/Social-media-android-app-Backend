@@ -9,7 +9,6 @@ const getUserById = async (req: Request, res: Response) => {
     console.log(req.params);
     try {
         const users = await User.findById(req.params.id);
-        console.log("user " + users);
         res.status(200).send(users);
     } catch (err) {
         res.status(400).send({ error: "fail to get user from db" });
