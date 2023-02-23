@@ -9,6 +9,8 @@ const userEmail = "user1@gmail.com";
 const userPassword = "12345";
 const userImage = "url";
 const userFullName = "Israel Israeli";
+const newUserFullName = "Israel Israeli";
+
 let accessToken = "";
 
 beforeAll(async () => {
@@ -50,5 +52,32 @@ describe("User Tests", () => {
         console.log(response.body);
         expect(response.body._id).toEqual(newUserId);
         expect(response.body.fullName).toEqual(userFullName);
+    });
+
+    test("update user by Id", async () => {
+        let response = await request(app)
+            .put("/user/" + newUserId)
+            .set("Authorization", "JWT " + accessToken)
+            .send({
+                userFullName: newUserFullName,
+            });
+        expect(response.statusCode).toEqual(200);
+        expect(response.body.fullName).toEqual(newUserFullName);
+        expect(response.body._id).toEqual(newUserId);
+
+        response = await request(app)
+            .get("/user/" + newUserId)
+            .set("Authorization", "JWT " + accessToken);
+        expect(response.statusCode).toEqual(200);
+        expect(response.body.fullName).toEqual(newUserFullName);
+        expect(response.body._id).toEqual(newUserId);
+
+        response = await request(app)
+            .put("/user/12345")
+            .set("Authorization", "JWT " + accessToken)
+            .send({
+                userFullName: newUserFullName,
+            });
+        expect(response.statusCode).toEqual(400);
     });
 });

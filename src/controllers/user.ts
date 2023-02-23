@@ -1,8 +1,6 @@
 import User from "../models/user_model";
 import { Request, Response } from "express";
-import request from "../request";
-import response from "../response";
-import error from "../error";
+import bcrypt from "bcrypt";
 
 const getUserById = async (req: Request, res: Response) => {
     console.log("in getUserById");
@@ -15,16 +13,25 @@ const getUserById = async (req: Request, res: Response) => {
     }
 };
 
-// const getUserById = async (req: request) => {
-//     console.log(req.params.id);
+const putUserById = async (req: Request, res: Response) => {
+    console.log("in putUserById");
+    console.log(req.params.id);
+    console.log(req.body.password);
+    if (req.body.password != undefined) {
+        const salt = await bcrypt.genSalt(10);
+        req.body.password = await bcrypt.hash(req.body.password, salt);
+    }
 
-//     try {
-//         const posts = await User.findById(req.params.id);
-//         return new response(posts, req.userId, null);
-//     } catch (err) {
-//         console.log("fail to get post from db");
-//         return new response(null, req.userId, new error(400, err.message));
-//     }
-// };
+    try {
+        const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+        });
+        console.log("save post in db");
+        res.status(200).send(user);
+    } catch (err) {
+        console.log("fail to update post in db");
+        res.status(400).send({ error: "fail to update post in db" });
+    }
+};
 
-export = { getUserById };
+export = { getUserById, putUserById };

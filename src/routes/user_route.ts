@@ -8,7 +8,6 @@
 import express from "express";
 import auth from "../controllers/auth";
 import user from "../controllers/user";
-import request from "../request.js";
 const router = express.Router();
 
 /**
@@ -37,16 +36,37 @@ const router = express.Router();
  */
 router.get("/:id", auth.authenticateMiddleware, user.getUserById);
 
-// router.get("/:id", auth.authenticateMiddleware, async (req, res) => {
-//     try {
-//         const response = await user.getUserById(request.fromRestRequest(req));
-//         response.sendRestResponse(res);
-//     } catch (err) {
-//         res.status(400).send({
-//             status: "fail",
-//             message: err.message,
-//         });
-//     }
-// });
+/**
+ * @swagger
+ * /post/{id}:
+ *   put:
+ *     summary: update existing post by id
+ *     tags: [Post]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         requiered: true
+ *         schema:
+ *           type: string
+ *           description: the updated post id
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Post'
+ *     responses:
+ *       200:
+ *         description: the requested post
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Post'
+ *
+ */
+
+router.put("/:id", auth.authenticateMiddleware, user.putUserById);
 
 export = router;
