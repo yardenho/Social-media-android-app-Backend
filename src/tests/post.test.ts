@@ -10,6 +10,7 @@ const secondPostMessage = "this is the second new test post message";
 let firstPostSender = "";
 
 let receivedFirstPostId = "";
+let receivedSecondPostId = "";
 
 const newPostMessageUpdated =
     "this is the updated first new test post message !!!";
@@ -81,6 +82,7 @@ describe("Posts Tests ", () => {
         expect(response.body.post.message).toEqual(secondPostMessage);
         expect(response.body.post.sender).toEqual(firstPostSender);
         expect(response.body.post.image).toEqual("url");
+        receivedSecondPostId = response.body.post._id;
     });
 
     test("get all posts", async () => {
@@ -166,5 +168,22 @@ describe("Posts Tests ", () => {
         expect(response.statusCode).toEqual(200);
         expect(response.body.post.message).toEqual(newPostMessageUpdated);
         expect(response.body.post.sender).toEqual(firstPostSender);
+    });
+
+    test("delete post by Id", async () => {
+        const response = await request(app)
+            .delete("/post/" + receivedSecondPostId)
+            .set("Authorization", "JWT " + accessToken);
+
+        expect(response.statusCode).toEqual(200);
+    });
+
+    test("get post by wrong id fails", async () => {
+        console.log("in test - " + receivedSecondPostId);
+        const response = await request(app)
+            .get("/post/" + receivedSecondPostId)
+            .set("Authorization", "JWT " + accessToken);
+        expect(response.statusCode).toEqual(200);
+        expect(response.body.post).toEqual(null);
     });
 });

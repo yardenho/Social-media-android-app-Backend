@@ -57,6 +57,7 @@ const getPostById = (req) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("in getPostById");
     try {
         const posts = yield post_model_1.default.findById(req.params.id);
+        console.log(posts);
         return new response_1.default(posts, req.userId, null);
     }
     catch (err) {
@@ -77,10 +78,24 @@ const putPostById = (req) => __awaiter(void 0, void 0, void 0, function* () {
         return new response_1.default(null, req.userId, new error_1.default(400, err.message));
     }
 });
+const deletePostById = (req) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req.params.id);
+    try {
+        yield post_model_1.default.findByIdAndDelete(req.params.id);
+        console.log("delete post from db");
+        return new response_1.default(null, req.userId, null);
+    }
+    catch (err) {
+        console.log("fail to delete post");
+        console.log(err);
+        return new response_1.default(null, req.userId, new error_1.default(400, err.message));
+    }
+});
 module.exports = {
     getAllPosts,
     addNewPost,
     getPostById,
     putPostById,
+    deletePostById,
 };
 //# sourceMappingURL=post.js.map

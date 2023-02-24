@@ -22,6 +22,7 @@ const firstPostMessage = "this is the first new test post message";
 const secondPostMessage = "this is the second new test post message";
 let firstPostSender = "";
 let receivedFirstPostId = "";
+let receivedSecondPostId = "";
 const newPostMessageUpdated = "this is the updated first new test post message !!!";
 const userEmail = "user1@gmail.com";
 const userPassword = "12345";
@@ -86,6 +87,7 @@ describe("Posts Tests ", () => {
         expect(response.body.post.message).toEqual(secondPostMessage);
         expect(response.body.post.sender).toEqual(firstPostSender);
         expect(response.body.post.image).toEqual("url");
+        receivedSecondPostId = response.body.post._id;
     }));
     test("get all posts", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(server_1.default)
@@ -162,6 +164,20 @@ describe("Posts Tests ", () => {
         expect(response.statusCode).toEqual(200);
         expect(response.body.post.message).toEqual(newPostMessageUpdated);
         expect(response.body.post.sender).toEqual(firstPostSender);
+    }));
+    test("delete post by Id", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(server_1.default)
+            .delete("/post/" + receivedSecondPostId)
+            .set("Authorization", "JWT " + accessToken);
+        expect(response.statusCode).toEqual(200);
+    }));
+    test("get post by wrong id fails", () => __awaiter(void 0, void 0, void 0, function* () {
+        console.log("in test - " + receivedSecondPostId);
+        const response = yield (0, supertest_1.default)(server_1.default)
+            .get("/post/" + receivedSecondPostId)
+            .set("Authorization", "JWT " + accessToken);
+        expect(response.statusCode).toEqual(200);
+        expect(response.body.post).toEqual(null);
     }));
 });
 //# sourceMappingURL=post.test.js.map
