@@ -188,6 +188,7 @@ const authenticateMiddleware = async (
         console.log("token user: " + user);
         return next();
     } catch (err) {
+        console.log(err);
         console.log("in middleware error");
         return sendError(401, res, "fail validation token");
     }
