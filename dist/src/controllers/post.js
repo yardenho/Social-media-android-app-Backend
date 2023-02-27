@@ -65,8 +65,6 @@ const getPostById = (req) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 const putPostById = (req) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("*****in put post*******");
-    console.log(req);
     try {
         const post = yield post_model_1.default.findByIdAndUpdate(req.params.id, req.body, {
             new: true,

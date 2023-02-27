@@ -258,7 +258,6 @@ describe("my awesome project", () => {
 
     test("test chat send message", (done) => {
         client2.socket.once("chat:message", (arg) => {
-            expect(arg.to).toBe(client2.id);
             expect(arg.message).toBe(message);
             expect(arg.from).toBe(client1.id);
             expect(arg.res.status).toBe("ok");
@@ -269,7 +268,6 @@ describe("my awesome project", () => {
         console.log("test chat send message");
 
         client1.socket.emit("chat:send_message", {
-            to: client2.id,
             message: message,
         });
     });
@@ -282,16 +280,13 @@ describe("my awesome project", () => {
         });
         console.log("test chat send message");
 
-        client1.socket.emit("chat:send_message", {
-            to: client2.id,
-        });
+        client1.socket.emit("chat:send_message", {});
     });
 
     test("test chat get all messages that send by user", (done) => {
         client1.socket.once("chat:get_all.response", (arg) => {
             expect(arg.body.length).toBe(1);
-            expect(arg.body[0].reciver).toBe(client2.id);
-            expect(arg.body[0].body).toBe(message);
+            expect(arg.body[0].message).toBe(message);
             expect(arg.body[0].sender).toBe(client1.id);
             expect(arg.status).toBe("ok");
 
@@ -301,20 +296,6 @@ describe("my awesome project", () => {
 
         client1.socket.emit("chat:get_all", {
             sender: client1.id,
-        });
-    });
-
-    test("test chat get all messages that send to user", (done) => {
-        client1.socket.once("chat:get_all.response", (arg) => {
-            expect(arg.body.length).toBe(0);
-            expect(arg.status).toBe("ok");
-
-            done();
-        });
-        console.log("test chat get all messages");
-
-        client1.socket.emit("chat:get_all", {
-            reciver: client1.id,
         });
     });
 

@@ -1,17 +1,12 @@
 import mongoose from "mongoose";
 
 const messageSchema = new mongoose.Schema({
-    body: {
+    message: {
         type: String,
         required: true,
     },
 
     sender: {
-        type: String,
-        required: true,
-    },
-
-    reciver: {
         type: String,
         required: true,
     },

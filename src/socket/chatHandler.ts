@@ -11,27 +11,27 @@ export = (
     //          'message': message to send}
 
     const sendMessage = async (payload) => {
-        const to = payload.to;
         const message = payload.message;
         const from = socket.data.user;
-
+        console.log("in send message chat handler");
         try {
             const response = await messageController.addNewMessage(
                 new request(payload, from, null, null)
             );
             console.log("trying to send chat:message");
-            io.to(to).emit("chat:message", {
-                to: to,
+            io.emit("chat:message", {
                 from: from,
                 message: message,
                 res: response,
             });
         } catch (err) {
+            console.log(err);
             socket.emit("chat:message", { status: "fail" });
         }
     };
 
     const getAllMessages = async (payload) => {
+        console.log("in get all messages handler");
         try {
             const response = await messageController.getAllMessages(
                 new request(payload, socket.data.user, payload, null)

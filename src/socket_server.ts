@@ -31,6 +31,7 @@ export = (server: http.Server) => {
 
         //register the socket in a room according to the user id, for the chat
         const userId = socket.data.user;
+        console.log(userId);
         await socket.join(userId);
     });
     return io;

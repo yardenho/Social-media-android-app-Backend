@@ -84,7 +84,7 @@ export = (
         }
     };
 
-    console.log("register echo handlers");
+    console.log("register post handlers");
     socket.on("post:get", getAllPosts);
     socket.on("post:post", addNewPost);
     socket.on("post:get:id", getPostById);
