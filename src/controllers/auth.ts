@@ -141,20 +141,28 @@ const refresh = async (req: Request, res: Response) => {
 };
 
 const logout = async (req: Request, res: Response) => {
+    console.log(" in logout");
     const refreshToken = getTokenFromRequest(req);
-    if (refreshToken == null)
-        return sendError(400, res, "authentication missing");
+    if (refreshToken == null) {
+        console.log("authentication missing");
 
+        return sendError(400, res, "authentication missing");
+    }
     try {
         const user = <TokenInfo>(
             jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
         );
         const userObj = await User.findById(user.id);
-        if (userObj == null)
+        if (userObj == null) {
+            console.log("fail validation token");
+
             return sendError(400, res, "fail validation token");
+        }
         if (!userObj.refresh_tokens.includes(refreshToken)) {
             userObj.refresh_tokens = [];
             await userObj.save();
+            console.log("authentication missing 2");
+
             return sendError(400, res, "authentication missing");
         }
 
@@ -165,6 +173,9 @@ const logout = async (req: Request, res: Response) => {
         await userObj.save();
         return res.status(200).send();
     } catch (err) {
+        console.log(err);
+        console.log("authentication missing 3");
+
         return sendError(400, res, "fail validation token");
     }
 };

@@ -178,7 +178,7 @@ describe("Posts Tests ", () => {
         expect(response.statusCode).toEqual(200);
     });
 
-    test("get post by wrong id fails", async () => {
+    test("get post that deleted by id ", async () => {
         console.log("in test - " + receivedSecondPostId);
         const response = await request(app)
             .get("/post/" + receivedSecondPostId)

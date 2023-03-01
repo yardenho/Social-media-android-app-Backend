@@ -83,6 +83,7 @@ describe("my awesome project", () => {
         client2.socket.close();
         await Post.remove();
         await User.remove();
+        await Message.remove();
         server.close();
         mongoose.connection.close();
     });
