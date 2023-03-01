@@ -28,6 +28,8 @@ import auth from "../controllers/auth";
  *           required:
  *               - email
  *               - password
+ *               - image
+ *               - full name
  *           properties:
  *               email:
  *                   type: string
@@ -35,16 +37,24 @@ import auth from "../controllers/auth";
  *               password:
  *                   type: string
  *                   description: The user password
+ *               image:
+ *                   type: string
+ *                   description: The user image
+ *               full name:
+ *                   type: string
+ *                   description: The user full name
  *           example:
  *               email: 'bob@gmail.com'
  *               password: '123456'
+ *               image: 'url'
+ *               full name: 'bob brown'
  */
 
 /**
  * @swagger
  * /auth/register:
  *   post:
- *       summary: registers a new user
+ *       summary: register a new user
  *       tags: [Auth]
  *       requestBody:
  *           required: true
@@ -86,7 +96,7 @@ router.post("/register", auth.register);
  *             $ref: '#/components/schemas/User'
  *     responses:
  *       200:
- *         description: Login success retuns access and refresh tokens
+ *         description: Login success retruns access and refresh tokens
  *         content:
  *           application/json:
  *             schema:
@@ -99,7 +109,14 @@ router.post("/register", auth.register);
  *             example:
  *               access_token: '223412341...'
  *               refresh_token: '123456...'
- *
+ *       400:
+ *              description: login error
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          err:
+ *                              type: string
+ *                              description: The error description
  */
 
 router.post("/login", auth.login);
@@ -127,6 +144,14 @@ router.post("/login", auth.login);
  *             example:
  *               access_token: '223412341...'
  *               refresh_token: '123456...'
+ *       400:
+ *              description: Refresh token error
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          err:
+ *                              type: string
+ *                              description: The error description
  *
  */
 
@@ -143,6 +168,14 @@ router.get("/refresh", auth.refresh);
  *     responses:
  *       200:
  *         description: logout sucess, refresh token is invalidated
+ *       400:
+ *              description: Logout error
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          err:
+ *                              type: string
+ *                              description: The error description
  *
  */
 

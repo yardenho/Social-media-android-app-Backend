@@ -77,13 +77,13 @@ describe("Auth Tests ", () => {
         refreshToken = response.body.tokens.refreshToken;
         expect(refreshToken).not.toBeNull();
     }));
-    test("login using valid access token ", () => __awaiter(void 0, void 0, void 0, function* () {
+    test("get posts using valid access token ", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(server_1.default)
             .get("/post")
             .set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).toEqual(200);
     }));
-    test("login using wrond access token ", () => __awaiter(void 0, void 0, void 0, function* () {
+    test("get posts using wrond access token ", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(server_1.default)
             .get("/post")
             .set("Authorization", "JWT 1" + accessToken);

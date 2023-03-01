@@ -171,7 +171,7 @@ describe("Posts Tests ", () => {
             .set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).toEqual(200);
     }));
-    test("get post by wrong id fails", () => __awaiter(void 0, void 0, void 0, function* () {
+    test("get post that deleted by id ", () => __awaiter(void 0, void 0, void 0, function* () {
         console.log("in test - " + receivedSecondPostId);
         const response = yield (0, supertest_1.default)(server_1.default)
             .get("/post/" + receivedSecondPostId)

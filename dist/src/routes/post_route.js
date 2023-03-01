@@ -1,9 +1,12 @@
 "use strict";
 /**
  * @swagger
- * tags:
- *   name: Post
- *   description: The Posts API
+ * components:
+ *  securitySchemes:
+ *      bearerAuth:
+ *          type: http
+ *          scheme: bearer
+ *          bearerFormat: JWT
  */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -17,6 +20,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+/**
+ * @swagger
+ * tags:
+ *   name: Post
+ *   description: The Posts API
+ */
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 const post_1 = __importDefault(require("../controllers/post"));
@@ -31,16 +40,21 @@ const request_1 = __importDefault(require("../request"));
  *       required:
  *         - message
  *         - sender
+ *         - image
  *       properties:
  *         message:
  *           type: string
  *           description: The post text
  *         sender:
  *           type: string
- *           description: The sending user id
+ *           description: The poster id
+ *         image:
+ *           type: string
+ *           description: The post image
  *       example:
  *         message: 'this is my new post'
  *         sender: '12342345234556'
+ *         image: 'url'
  */
 /**
  * @swagger
@@ -66,8 +80,8 @@ const request_1 = __importDefault(require("../request"));
  *               items:
  *                  $ref: '#/components/schemas/Post'
  *
+ *
  */
-// router.get("/", auth.authenticateMiddleware, post.getAllPosts);
 router.get("/", auth_js_1.default.authenticateMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield post_1.default.getAllPosts(request_1.default.fromRestRequest(req));
@@ -103,8 +117,9 @@ router.get("/", auth_js_1.default.authenticateMiddleware, (req, res) => __awaite
  *             schema:
  *               $ref: '#/components/schemas/Post'
  *
+ *
+ *
  */
-// router.get("/:id", auth.authenticateMiddleware, post.getPostById);
 router.get("/:id", auth_js_1.default.authenticateMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield post_1.default.getPostById(request_1.default.fromRestRequest(req));
@@ -139,8 +154,9 @@ router.get("/:id", auth_js_1.default.authenticateMiddleware, (req, res) => __awa
  *             schema:
  *               $ref: '#/components/schemas/Post'
  *
+ *
+ *
  */
-// router.post("/", auth.authenticateMiddleware, post.addNewPost);
 router.post("/", auth_js_1.default.authenticateMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield post_1.default.addNewPost(request_1.default.fromRestRequest(req));
@@ -167,7 +183,7 @@ router.post("/", auth_js_1.default.authenticateMiddleware, (req, res) => __await
  *         requiered: true
  *         schema:
  *           type: string
- *           description: the updated post id
+ *           description: the updated post by id
  *     requestBody:
  *       required: true
  *       content:
@@ -182,8 +198,8 @@ router.post("/", auth_js_1.default.authenticateMiddleware, (req, res) => __await
  *             schema:
  *               $ref: '#/components/schemas/Post'
  *
+ *
  */
-// router.put("/:id", auth.authenticateMiddleware, post.putPostById);
 router.put("/:id", auth_js_1.default.authenticateMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield post_1.default.putPostById(request_1.default.fromRestRequest(req));
@@ -218,6 +234,7 @@ router.put("/:id", auth_js_1.default.authenticateMiddleware, (req, res) => __awa
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Post'
+ *
  *
  */
 router.delete("/:id", auth_js_1.default.authenticateMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {

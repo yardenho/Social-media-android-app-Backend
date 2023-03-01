@@ -38,10 +38,10 @@ router.get("/:id", auth.authenticateMiddleware, user.getUserById);
 
 /**
  * @swagger
- * /post/{id}:
+ * /user/{id}:
  *   put:
- *     summary: update existing post by id
- *     tags: [Post]
+ *     summary: update existing user by id
+ *     tags: [User]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -50,20 +50,20 @@ router.get("/:id", auth.authenticateMiddleware, user.getUserById);
  *         requiered: true
  *         schema:
  *           type: string
- *           description: the updated post id
+ *           description: the updated user id
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Post'
+ *             $ref: '#/components/schemas/user'
  *     responses:
  *       200:
- *         description: the requested post
+ *         description: the requested user
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Post'
+ *               $ref: '#/components/schemas/user'
  *
  */
 

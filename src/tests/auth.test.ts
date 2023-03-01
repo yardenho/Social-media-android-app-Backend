@@ -73,14 +73,14 @@ describe("Auth Tests ", () => {
         expect(refreshToken).not.toBeNull();
     });
 
-    test("login using valid access token ", async () => {
+    test("get posts using valid access token ", async () => {
         const response = await request(app)
             .get("/post")
             .set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).toEqual(200);
     });
 
-    test("login using wrond access token ", async () => {
+    test("get posts using wrond access token ", async () => {
         const response = await request(app)
             .get("/post")
             .set("Authorization", "JWT 1" + accessToken);

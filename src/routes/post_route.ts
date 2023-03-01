@@ -1,5 +1,15 @@
 /**
  * @swagger
+ * components:
+ *  securitySchemes:
+ *      bearerAuth:
+ *          type: http
+ *          scheme: bearer
+ *          bearerFormat: JWT
+ */
+
+/**
+ * @swagger
  * tags:
  *   name: Post
  *   description: The Posts API
@@ -20,16 +30,21 @@ import request from "../request";
  *       required:
  *         - message
  *         - sender
+ *         - image
  *       properties:
  *         message:
  *           type: string
  *           description: The post text
  *         sender:
  *           type: string
- *           description: The sending user id
+ *           description: The poster id
+ *         image:
+ *           type: string
+ *           description: The post image
  *       example:
  *         message: 'this is my new post'
  *         sender: '12342345234556'
+ *         image: 'url'
  */
 
 /**
@@ -56,9 +71,9 @@ import request from "../request";
  *               items:
  *                  $ref: '#/components/schemas/Post'
  *
+ *
  */
 
-// router.get("/", auth.authenticateMiddleware, post.getAllPosts);
 router.get("/", auth.authenticateMiddleware, async (req, res) => {
     try {
         const response = await post.getAllPosts(request.fromRestRequest(req));
@@ -94,9 +109,9 @@ router.get("/", auth.authenticateMiddleware, async (req, res) => {
  *             schema:
  *               $ref: '#/components/schemas/Post'
  *
+ *
+ *
  */
-
-// router.get("/:id", auth.authenticateMiddleware, post.getPostById);
 
 router.get("/:id", auth.authenticateMiddleware, async (req, res) => {
     try {
@@ -132,9 +147,10 @@ router.get("/:id", auth.authenticateMiddleware, async (req, res) => {
  *             schema:
  *               $ref: '#/components/schemas/Post'
  *
+ *
+ *
  */
 
-// router.post("/", auth.authenticateMiddleware, post.addNewPost);
 router.post("/", auth.authenticateMiddleware, async (req, res) => {
     try {
         const response = await post.addNewPost(request.fromRestRequest(req));
@@ -161,7 +177,7 @@ router.post("/", auth.authenticateMiddleware, async (req, res) => {
  *         requiered: true
  *         schema:
  *           type: string
- *           description: the updated post id
+ *           description: the updated post by id
  *     requestBody:
  *       required: true
  *       content:
@@ -176,9 +192,8 @@ router.post("/", auth.authenticateMiddleware, async (req, res) => {
  *             schema:
  *               $ref: '#/components/schemas/Post'
  *
+ *
  */
-
-// router.put("/:id", auth.authenticateMiddleware, post.putPostById);
 
 router.put("/:id", auth.authenticateMiddleware, async (req, res) => {
     try {
@@ -214,6 +229,7 @@ router.put("/:id", auth.authenticateMiddleware, async (req, res) => {
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Post'
+ *
  *
  */
 
